@@ -270,6 +270,7 @@ namespace RelhaxModpack
             Polish.Add("yes", "Tak");
             French.Add("yes", "Oui");
             Russian.Add("yes", "Да");
+            Pirate.Add("yes', "Arr!");
 
             English.Add("no", "no");
             German.Add("no", "nein");
@@ -384,6 +385,7 @@ namespace RelhaxModpack
             Polish.Add("MenuItemRestore", "Przywróć");
             French.Add("MenuItemRestore", "Restaurer");
             Russian.Add("MenuItemRestore", "Восстановить");
+            Pirate.Add("MenuItemRestore", "Parley?");
 
             //Component: MenuItemCheckUpdates
             //The menu item for restoring the application
@@ -418,6 +420,7 @@ namespace RelhaxModpack
             Polish.Add("InstallModpackButton", "Przejdź Do Wyboru Modyfikacji");
             French.Add("InstallModpackButton", "Sélection des mods");
             Russian.Add("InstallModpackButton", "Начать выбор модов");
+            Pirate.Add("InstallModpackButton", "Plunder!");
 
             //Component: InstallModpackButtonDescription
             //
@@ -426,6 +429,7 @@ namespace RelhaxModpack
             Polish.Add("InstallModpackButtonDescription", "Zaznacz modyfikacje, które chcesz zainstalować w swoim kliencie WoT");
             French.Add("InstallModpackButtonDescription", "Sélectionnez les mods que vous souhaitez installer sur votre client WoT");
             Russian.Add("InstallModpackButtonDescription", "Выберите моды, которые вы хотите установить в клиент World of Tanks");
+            Pirate.Add("InstallModpackButtonDescription", "Which loot will you be stashing today?");
 
             //Component: UninstallModpackButton
             //
