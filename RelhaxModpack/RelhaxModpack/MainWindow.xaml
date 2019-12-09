@@ -12,7 +12,7 @@
     Closing="TheMainWindow_Closing"
     Icon="Resources/modpack_icon.ico">
     <Window.Resources>
-        
+
     </Window.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
         <Grid.Background>
@@ -37,12 +37,12 @@
                     Tag="DiagnosticUtilitiesButton" x:Name="DiagnosticUtilitiesButton" Click="DiagnosticUtilitiesButton_Click" ToolTipService.ShowOnDisabled="True"/>
         </Grid>
         <TabControl HorizontalAlignment="Stretch" Height="254" Margin="12,81,12,0" VerticalAlignment="Top" Background="#7FE5E5E5" Tag="SettingsTagGroup">
-            <TabItem Header="Intro" x:Name="SettingsTabIntro" Tag="SettingsTabIntro" Background="#7FE5E5E5">
+            <TabItem Header="Intro" x:Name="SettingsTabIntro" Tag="SettingsTabIntro" Background="#7FE5E5E5" Margin="-2,-2,-2,0">
                 <Grid Background="#7FE5E5E5" Tag="SettingsTabIntroGrid">
                     <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" x:Name="HelperText" Tag="HelperText"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Selection View" x:Name="SettingsTabSelectionView" Tag="SettingsTabSelectionView" Background="#7FE5E5E5">
+            <TabItem Header="Selection View" x:Name="SettingsTabSelectionView" Tag="SettingsTabSelectionView" Background="#7FE5E5E5" Margin="0,-2,-1,0">
                 <Grid Background="#7FE5E5E5" Tag="SettingsTabSelectionViewGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -78,15 +78,16 @@
                     </CheckBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Installation Settings" x:Name="SettingsTabInstallationSettings" Tag="SettingsTabInstallationSettings" Background="#7FE5E5E5">
+            <TabItem Header="Installation Settings" x:Name="SettingsTabInstallationSettings" Tag="SettingsTabInstallationSettings" Background="#7FE5E5E5" Margin="0,-2,-1,0">
                 <Grid Background="#7FE5E5E5" Tag="SettingsTabInstallationSettingsGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
+                        <TextBlock Text="Recommended Settings" Tag="LauncherRecommendedSettings" IsEnabled="True"/>
                         <CheckBox Tag="CleanInstallCB" x:Name="CleanInstallCB" Click="OnCleanInstallChanged" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="CleanInstallText" Text="Clean installation (Recommended)" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="CleanInstallText" Text="Clean installation" TextWrapping="Wrap"/>
                         </CheckBox>
                         <CheckBox Tag="ClearLogFilesCB" x:Name="ClearLogFilesCB" Click="OnClearLogFilesChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="ClearLogFilesText" Text="Clear log files" TextWrapping="Wrap"/>
@@ -97,20 +98,15 @@
                         <CheckBox Tag="SaveUserDataCB" x:Name="SaveUserDataCB" Click="OnSaveUserDataChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="SaveUserDataText" Text="Save user created data" TextWrapping="Wrap"/>
                         </CheckBox>
-                        <CheckBox Tag="CreateShortcutsCB" x:Name="CreateShortcutsCB" Click="OnCreateShortcutsChanged" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="CreateShortcutsText" Text="Create shortcuts" TextWrapping="Wrap"/>
-                        </CheckBox>
-                        <CheckBox IsEnabled="True" Tag="MulticoreExtractionCB" x:Name="MulticoreExtractionCB" Click="OnMulticoreExtractionChanged" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="MulticoreExtractionText" Text="Multicore extraction mode" TextWrapping="Wrap"/>
-                        </CheckBox>
-                        <TextBlock Text="Detected Cores: {0}" Tag="MulticoreExtractionCoresCountLabel" x:Name="MulticoreExtractionCoresCountLabel" IsEnabled="True"
-                                   Padding="20,0,0,0" TextWrapping="Wrap" ToolTipService.ShowOnDisabled="True"/>
-                        <CheckBox IsEnabled="True" Tag="InstallWhileDownloadingCB" x:Name="InstallWhileDownloadingCB" Click="OnImmidateExtarctionChanged"
-                                  ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="InstallWhileDownloadingText" Text="Extract while downloading" TextWrapping="Wrap"/>
+                        <CheckBox x:Name="DeleteOldPackagesCB" Tag="DeleteOldPackagesCB" Click="DeleteOldCacheFiles_Click" ToolTipService.ShowOnDisabled="True">
+                            <TextBlock x:Name="DeleteOldPackagesText" Text="Delete old packages" TextWrapping="Wrap"/>
                         </CheckBox>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
+                        <TextBlock Text="Optional Settings" Tag="LauncherOptionalSettings" IsEnabled="True"/>
+                        <CheckBox Tag="CreateShortcutsCB" x:Name="CreateShortcutsCB" Click="OnCreateShortcutsChanged" ToolTipService.ShowOnDisabled="True">
+                            <TextBlock x:Name="CreateShortcutsText" Text="Create shortcuts" TextWrapping="Wrap"/>
+                        </CheckBox>
                         <CheckBox Tag="ShowInstallCompleteWindowCB" x:Name="ShowInstallCompleteWindowCB" Click="OnShowInstallCompleteWindowChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="ShowInstallCompleteWindowText" Text="Show install complete window" TextWrapping="Wrap"/>
                         </CheckBox>
@@ -118,13 +114,22 @@
                             <TextBlock x:Name="BackupModsText" Text="Backup mods folder before installation" TextWrapping="Wrap"/>
                         </CheckBox>
                         <TextBlock x:Name="BackupModsSizeLabelUsed" Text="Backups: {0}  Size: {1}" Margin="20,0,0,0" TextWrapping="Wrap" ToolTipService.ShowOnDisabled="True"/>
-                        <CheckBox x:Name="DeleteOldPackagesCB" Tag="DeleteOldPackagesCB" Click="DeleteOldCacheFiles_Click" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="DeleteOldPackagesText" Text="Delete old packages" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,130,0,0">
+                        <TextBlock Text="Advanced Settings" Tag="LauncherAdvancedSettings" IsEnabled="True"/>
+                        <CheckBox IsEnabled="True" Tag="InstallWhileDownloadingCB" x:Name="InstallWhileDownloadingCB" Click="OnImmidateExtarctionChanged"
+                                  ToolTipService.ShowOnDisabled="True">
+                            <TextBlock x:Name="InstallWhileDownloadingText" Text="Extract while downloading" TextWrapping="Wrap"/>
                         </CheckBox>
+                        <CheckBox IsEnabled="True" Tag="MulticoreExtractionCB" x:Name="MulticoreExtractionCB" Click="OnMulticoreExtractionChanged" ToolTipService.ShowOnDisabled="True">
+                            <TextBlock x:Name="MulticoreExtractionText" Text="Multicore extraction mode" TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <TextBlock Text="Detected Cores: {0}" Tag="MulticoreExtractionCoresCountLabel" x:Name="MulticoreExtractionCoresCountLabel" IsEnabled="True"
+                                   Padding="20,0,0,0" TextWrapping="Wrap" ToolTipService.ShowOnDisabled="True"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Application Settings" x:Name="SettingsTabApplicationSettings" Tag="SettingsTabApplicationSettings" Background="#7FE5E5E5">
+            <TabItem Header="Application Settings" x:Name="SettingsTabApplicationSettings" Tag="SettingsTabApplicationSettings" Background="#7FE5E5E5" Margin="0,-2,-1,0">
                 <Grid Background="#7FE5E5E5" Tag="SettingsTabApplicationSettingsGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -190,7 +195,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Advanced Settings" x:Name="SettingsTabAdvancedSettings" Tag="SettingsTabAdvancedSettings" Background="#7FE5E5E5">
+            <TabItem Header="Advanced Settings" x:Name="SettingsTabAdvancedSettings" Tag="SettingsTabAdvancedSettings" Background="#7FE5E5E5" Margin="0,-2,-1,0">
                 <Grid Background="#7FE5E5E5" Tag="SettingsTabAdvancedSettingsGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
