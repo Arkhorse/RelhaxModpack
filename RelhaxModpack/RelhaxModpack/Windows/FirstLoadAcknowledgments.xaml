@@ -7,15 +7,22 @@
         xmlns:ui="clr-namespace:RelhaxModpack.UIComponents"
         mc:Ignorable="d"
         Title="First Load Acknowledgments" Height="260" Width="600" ResizeMode="NoResize" Loaded="RelhaxWindow_Loaded"
-        LocalizeWindow="True" ApplyToolTips="False" ApplyColorSettings="False" ApplyScaling="False">
+        LocalizeWindow="True" ApplyToolTips="False" ApplyColorSettings="False" ApplyScaling="False" Background="LightGray">
     <Grid>
         <StackPanel>
+            <TextBlock TextAlignment="Center" Margin="2,0,0,0" Text="Welcome to Relhax!"/>
+            <TextBlock Text="The following are some legal requirements:"/>
             <CheckBox x:Name="license_Agree" HorizontalAlignment="Stretch" Margin="10,10,10,0" VerticalAlignment="Top" Click="CheckForContinueButton">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <TextBlock x:Name="AgreementLicense" TextWrapping="Wrap" Text="I have read and agree to the "/>
                     <ui:RelhaxHyperlink x:Name="LicenseLink" URL="https://raw.githubusercontent.com/Willster419/RelhaxModpack/master/LICENSE" Text="License Agreement"/>
                 </StackPanel>
             </CheckBox>
+            <CheckBox HorizontalAlignment="Stretch" Margin="10,10,10,0" VerticalAlignment="Top"  x:Name="collect_stats" Click="CheckForContinueButton">
+                <TextBlock x:Name="AgreementAnonData" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                           Text="I understand that Relhax V2 collects anonymous usage data to improve the application, and can be disabled in the Advanced Settings Tab" />
+            </CheckBox>
+            <TextBlock Text="And now some useful info:" Margin="0,2,0,0"/>
             <CheckBox HorizontalAlignment="Stretch"  VerticalAlignment="Top" Margin="10,10,10,0" x:Name="support" Click="CheckForContinueButton">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <TextBlock x:Name="AgreementSupport1" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -30,10 +37,7 @@
                  Text="I understand Relhax is a mod hosting and installation service and Relhax does not maintain every mod found in this Modpack" >
                 </TextBlock>
             </CheckBox>
-            <CheckBox HorizontalAlignment="Stretch" Margin="10,10,10,0" VerticalAlignment="Top"  x:Name="collect_stats" Click="CheckForContinueButton">
-                <TextBlock x:Name="AgreementAnonData" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap"
-                           Text="I understand that Relhax V2 collects anonymous usage data to improve the application, and can be disabled in the advanced settings tab" />
-            </CheckBox>
+
             <TextBlock x:Name="V2UpgradeNoticeText" TextWrapping="Wrap" HorizontalAlignment="Stretch" Padding="20,5,0,0"
                  Text="It looks like you are running an upgrade from V1 to V2 for the first time. Pressing continue will result in an upgrade to file structure that cannot be reverted. It is recommended to make a backup of your V1 folder before continuing" Margin="10,0" Foreground="Red" Visibility="Hidden"  >
             </TextBlock>
