@@ -204,13 +204,14 @@
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Uninstall Mode:" Tag="UninstallModeGroupBox" x:Name="UninstallModeGroupBox" TextWrapping="Wrap" ToolTipService.ShowOnDisabled="True"/>
                         <StackPanel Orientation="Horizontal">
-                            <RadioButton x:Name="UninstallDefault" Tag="UninstallDefault" Margin="20,0,0,0" Checked="UninstallDefault_Checked" ToolTipService.ShowOnDisabled="True">
-                                <TextBlock x:Name="UninstallDefaultText" Text="Default" TextWrapping="Wrap"/>
+                            <RadioButton x:Name="UninstallDefault" Tag="UninstallDefault" Checked="UninstallDefault_Checked" ToolTipService.ShowOnDisabled="True">
+                                <TextBlock x:Name="UninstallDefaultText" Text="Verbose" TextWrapping="Wrap"/>
                             </RadioButton>
                             <RadioButton x:Name="UninstallQuick" Tag="UninstallQuick" Margin="5,0,0,0" Checked="UninstallQuick_Checked" ToolTipService.ShowOnDisabled="True">
                                 <TextBlock x:Name="UninstallQuickText" Text="Quick" TextWrapping="Wrap"/>
                             </RadioButton>
                         </StackPanel>
+                        <TextBlock Text="Advanced Settings:"/>
                         <CheckBox x:Name="VerboseLoggingCB" Tag="VerboseLoggingCB" Click="VerboseLoggingCB_Click" IsChecked="True" IsEnabled="False" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="VerboseLoggingText" Text="Verbose Logging" TextWrapping="Wrap"/>
                         </CheckBox>
@@ -232,6 +233,7 @@
                         </CheckBox>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
+                        <TextBlock Text="Auto Install Options:"/>
                         <CheckBox x:Name="AutoInstallCB" Tag="EnableModsAutoSyncCheckbox" IsEnabled="True" Click="AutoInstallCB_Click" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="AutoInstallText" Text="Enable auto install" TextWrapping="Wrap"/>
                         </CheckBox>
