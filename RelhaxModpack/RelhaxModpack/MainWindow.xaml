@@ -136,12 +136,14 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
+                        <TextBlock Text="Recommended Options:"/>
                         <CheckBox Tag="SaveLastInstallCB" x:Name="SaveLastInstallCB" Click="OnSaveLastInstallChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="SaveLastInstallText" Text="Save mod selection of last installation" TextWrapping="Wrap"/>
                         </CheckBox>
                         <CheckBox x:Name="NotifyIfSameDatabaseCB" Tag="NotifyIfSameDatabaseCB" Click="OnInformIfNoNewDatabaseChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="NotifyIfSameDatabaseText" Text="Inform if no new database available (stable database only)" TextWrapping="Wrap"/>
                         </CheckBox>
+                        <TextBlock Text="Advanced Options:"/>
                         <CheckBox Tag="ForceManuelGameDetectionCB" x:Name="ForceManuelGameDetectionCB" Click="OnForceManuelGameDetectionChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="ForceManuelGameDetectionText" Text="Force manual game detection" TextWrapping="Wrap"/>
                         </CheckBox>
@@ -156,14 +158,15 @@
                             <TextBlock x:Name="MinimizeToSystemTrayText" Text="Minimize to system tray" TextWrapping="Wrap"/>
                         </CheckBox>
                         <!-- Use a margin of 20 to give it a tree affect-->
-                        <CheckBox Tag="UseBetaDatabaseCB" x:Name="UseBetaDatabaseCB" Click="OnUseBetaDatabaseChanged">
-                            <TextBlock x:Name="UseBetaDatabaseText" Text="Use beta database" TextWrapping="Wrap"/>
-                        </CheckBox>
-                        <ComboBox Tag="UseBetaDatabaseBranches" x:Name="UseBetaDatabaseBranches" SelectionChanged="OnBetaDatabaseSelectionChanged"
-                                  Margin="20,0,0,0" IsEnabled="False" ToolTipService.ShowOnDisabled="True"/>
+                        <TextBlock Text="Beta Options:"/>
                         <CheckBox Tag="UseBetaApplicationCB" x:Name="UseBetaApplicationCB" Click="OnUseBetaAppChanged" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="UseBetaApplicationText" Text="Use beta application" TextWrapping="Wrap"/>
                         </CheckBox>
+                        <CheckBox Tag="UseBetaDatabaseCB" x:Name="UseBetaDatabaseCB" Click="OnUseBetaDatabaseChanged">
+                            <TextBlock x:Name="UseBetaDatabaseText" Text="Use pre-release database" TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <ComboBox Tag="UseBetaDatabaseBranches" x:Name="UseBetaDatabaseBranches" SelectionChanged="OnBetaDatabaseSelectionChanged"
+                                  Margin="20,0,0,0" IsEnabled="False" ToolTipService.ShowOnDisabled="True"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <TextBlock x:Name="ThemeSelectText" Text="Select theme:" ToolTipService.ShowOnDisabled="True"/>
@@ -178,11 +181,11 @@
                                 <TextBlock x:Name="ThemeCustomText" Text="Custom" TextWrapping="Wrap"/>
                             </RadioButton>
                         </StackPanel>
-                        <Button Tag="DumpColorSettingsButton" Name="DumpColorSettingsButton" Click="DumpColorSettingsButton_Click" Margin="0,0,0,2" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock x:Name="DumpColorSettingsButtonText" Text="Save current color settings" TextWrapping="Wrap"/>
-                        </Button>
-                        <Button Tag="OpenColorPickerButton" Name="OpenColorPickerButton" Click="OpenColorPickerButton_Click" ToolTipService.ShowOnDisabled="True">
+                        <Button Tag="OpenColorPickerButton" x:Name="OpenColorPickerButton" Click="OpenColorPickerButton_Click" Margin="0,0,0,2" ToolTipService.ShowOnDisabled="True">
                             <TextBlock x:Name="OpenColorPickerButtonText" Text="Open color picker" TextWrapping="Wrap"/>
+                        </Button>
+                        <Button Tag="DumpColorSettingsButton" Name="DumpColorSettingsButton" Click="DumpColorSettingsButton_Click" ToolTipService.ShowOnDisabled="True">
+                            <TextBlock x:Name="DumpColorSettingsButtonText" Text="Save current color settings" TextWrapping="Wrap"/>
                         </Button>
                         <TextBlock x:Name="ApplyCustomScalingText" Tag="ApplyCustomScalingCB" Text="Application scaling" ToolTipService.ShowOnDisabled="True"/>
                         <!-- https://stackoverflow.com/questions/832216/wpf-how-to-make-controls-stretch-in-a-stackpanel -->
