@@ -14,8 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Reflection;
 using System.ComponentModel;
 using System.Windows.Data;
-using RelhaxModpack.UIComponents;
-using RelhaxModpack.UIComponents.ClassThemeDefinitions;
+using RelhaxModpack.UI;
+using RelhaxModpack.UI.ClassThemeDefinitions;
+using RelhaxModpack.Xml;
+using RelhaxModpack.Utilities.Enums;
 
 namespace RelhaxModpack
 {
@@ -76,9 +78,9 @@ namespace RelhaxModpack
         public static void ApplyCustomStyles(Window window)
         {
             //get the list
-            List<FrameworkElement> UIComponents = Utils.GetAllWindowComponentsLogical(window, false);
-            UIComponents = UIComponents.Where(component => component.Tag is string ID && !string.IsNullOrEmpty(ID)).ToList();
-            foreach (FrameworkElement element in UIComponents)
+            List<FrameworkElement> UI = UiUtils.GetAllWindowComponentsLogical(window, false);
+            UI = UI.Where(component => component.Tag is string ID && !string.IsNullOrEmpty(ID)).ToList();
+            foreach (FrameworkElement element in UI)
             {
                 if (element is Button button)
                 {
@@ -224,7 +226,7 @@ namespace RelhaxModpack
         public static void ApplyThemeToRootComponent(FrameworkElement rootElement, bool customWindowDefinition, WindowColorset wcolorset = null, bool includeSelf = false)
         {
             //build list of all internal framework components
-            List<FrameworkElement> allWindowControls = Utils.GetAllWindowComponentsLogical(rootElement, includeSelf).Distinct().ToList();
+            List<FrameworkElement> allWindowControls = UiUtils.GetAllWindowComponentsLogical(rootElement, includeSelf).Distinct().ToList();
             allWindowControls = allWindowControls.Where(element => element.Tag is string ID && !string.IsNullOrWhiteSpace(ID)).ToList();
 
             //apply all class level color sets
@@ -384,6 +386,10 @@ namespace RelhaxModpack
             {
                 colorset = CurrentTheme.BorderColorset;
             }
+            else if (element is RelhaxHyperlink)
+            {
+                colorset = CurrentTheme.RelhaxHyperlinkColorset;
+            }
             else if (element is Control)
             {
                 colorset = CurrentTheme.ControlColorset;
@@ -403,7 +409,7 @@ namespace RelhaxModpack
             //at the theme applying level, this would be from a tag (not class) level. but this can change between themes
             TemplateWindow templateWindow = new TemplateWindow();
 
-            List<FrameworkElement> templateWindowComponents = Utils.GetAllWindowComponentsLogical(templateWindow, false).Distinct().ToList();
+            List<FrameworkElement> templateWindowComponents = UiUtils.GetAllWindowComponentsLogical(templateWindow, false).Distinct().ToList();
 
             Button b = templateWindowComponents.First( element => element is Button) as Button;
             Themes.Default.ButtonColorset.BackgroundBrush = new CustomBrush()
@@ -497,7 +503,7 @@ namespace RelhaxModpack
         private static void BackupDefaultComponentColorSettings(Window window)
         {
             //backup the component colorsettings (per window)
-            List<FrameworkElement> allWindowControls = Utils.GetAllWindowComponentsLogical(window, false).Distinct().ToList();
+            List<FrameworkElement> allWindowControls = UiUtils.GetAllWindowComponentsLogical(window, false).Distinct().ToList();
             allWindowControls = allWindowControls.Where(element => element.Tag is string ID && !string.IsNullOrWhiteSpace(ID)).ToList();
 
             WindowColorset windowColorset = Themes.Default.WindowColorsets[window.GetType()];
@@ -738,7 +744,7 @@ namespace RelhaxModpack
                     windowColorset.ComponentColorsets = new Dictionary<string, ComponentColorset>();
 
                 //get all components of that windowType that have tags
-                List<FrameworkElement> windowComponents = Utils.GetAllWindowComponentsLogical(window, false).Distinct().ToList();
+                List<FrameworkElement> windowComponents = UiUtils.GetAllWindowComponentsLogical(window, false).Distinct().ToList();
                 windowComponents = windowComponents.Where(ele => ele.Tag is string str && !string.IsNullOrWhiteSpace(str)).ToList();
                 foreach(FrameworkElement element in windowComponents)
                 {

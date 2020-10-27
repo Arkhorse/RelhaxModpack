@@ -88,6 +88,16 @@ namespace RelhaxModpack
         public const string RelicBatchUpdateScriptServer = "relic_self_updater.txt";
 
         /// <summary>
+        /// The name of the application executable when compiled with stable distribution
+        /// </summary>
+        public const string ApplicationFilenameStable = "RelhaxModpack.exe";
+
+        /// <summary>
+        /// The name of the application executable when compiled with beta distribution
+        /// </summary>
+        public const string ApplicationFilenameBeta = "RelhaxModpackBeta.exe";
+
+        /// <summary>
         /// The old V1 filename to save the self updater script as
         /// </summary>
         [Obsolete("Database format V1 is deprecated, please use V2 instead.")]
@@ -322,6 +332,21 @@ namespace RelhaxModpack
         /// The name of the logs folder used for WG CEF browser and Relhax Modpack
         /// </summary>
         public const string LogsFolder = "logs";
+
+        /// <summary>
+        /// The minimum release value of the user's installed .NET framework to use the modpack
+        /// </summary>
+        /// <remarks>It varies for OS. For example:
+        /// On Windows 10 May 2019 Update and Windows 10 November 2019 Update: 528040
+        /// On Windows 10 May 2020 Update: 528372
+        /// On all other Windows operating systems(including other Windows 10 operating systems): 528049
+        /// See: https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed </remarks>
+        public const int MinimumDotNetFrameworkVersionRequired = 528040;
+
+        /// <summary>
+        /// URL to get the latest version of the .NET Framework
+        /// </summary>
+        public const string DotNetFrameworkLatestDownloadURL = "https://dotnet.microsoft.com/download/dotnet-framework";
         #endregion
 
         #region URLs
@@ -399,17 +424,23 @@ namespace RelhaxModpack
         /// <summary>
         /// The xpath string to get the onlineFolder attribute from the document root
         /// </summary>
-        public const string DatabaseOnlineFolderXpath = "//modInfoAlpha.xml/@onlineFolder";
+        public const string DatabaseOnlineFolderXpath = "/modInfoAlpha.xml/@onlineFolder";
 
         /// <summary>
         /// The xpath string to get the database version info attribute from the document root
         /// </summary>
-        public const string DatabaseOnlineVersionXpath = "//modInfoAlpha.xml/@version";
+        public const string DatabaseOnlineVersionXpath = "/modInfoAlpha.xml/@version";
 
         /// <summary>
-        /// the latest config file version for saving the user's selection preferences
+        /// The old V2 config file version for saving the user's selection preferences
         /// </summary>
-        public const string ConfigFileVersion = "2.0";
+        [Obsolete("Selection file version 2.0 is deprecated")]
+        public const string ConfigFileVersion2V0 = "2.0";
+
+        /// <summary>
+        /// The latest config file version for saving the user's selection preferences
+        /// </summary>
+        public const string ConfigFileVersion3V0 = "3.0";
 
         /// <summary>
         /// The name of the WoT process used for detecting if it is running
@@ -492,6 +523,16 @@ namespace RelhaxModpack
         public const double MinimumDisplayScale = 1.0F;
 
         /// <summary>
+        /// The number of characters that make up a package UID
+        /// </summary>
+        public const int NumberUIDCharacters = 16;
+
+        /// <summary>
+        /// The array of character options that are used for generating the UID
+        /// </summary>
+        public const string UIDCharacters = @"abcdefghijklmnopqrstuvwxyz0123456789";
+
+        /// <summary>
         /// The manager info zip in a program reference. Allows for multiple instances of the application to be active at the same time. Also saves milliseconds by not having to write to disk.
         /// </summary>
         public static Ionic.Zip.ZipFile ManagerInfoZipfile = null;
@@ -503,15 +544,15 @@ namespace RelhaxModpack
         /// </summary>
         /// <param name="xmlfile">The path to the file</param>
         /// <param name="SettingsClass">The type of the settings class to load into</param>
-        /// <param name="propertiesToExclude">A string list of properties (in the class) to not look for</param>
-        /// <param name="classInstance">The actual object to append the xml settings to</param>
-        /// <returns></returns>
+        /// <param name="propertiesToExclude">A string list of properties (in the class) to not look for. If none, you can pass in null</param>
+        /// <param name="classInstance">The object to append the xml settings to. If the settings class is static, pass in null</param>
+        /// <returns>Success if loading, false otherwise</returns>
         public static bool LoadSettings(string xmlfile, Type SettingsClass, string[] propertiesToExclude, object classInstance)
         {
             //first check if the file even exists
             if (!File.Exists(xmlfile))
             {
-                Logging.Warning("Xml settings file {0} does not exist, using defaults set in class{1}{2}", xmlfile, SettingsClass.GetType().ToString(), Environment.NewLine);
+                Logging.Info("Xml settings file {0} does not exist, using defaults set in class '{1}'", xmlfile, SettingsClass.Name.ToString());
                 return false;
             }
             //get all fields from the class

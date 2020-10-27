@@ -1,0 +1,184 @@
+﻿<local:RelhaxWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RelhaxModpack.Windows"
+        x:Class="RelhaxModpack.Windows.ModpackToolbox"
+        mc:Ignorable="d"
+        Title="Modpack Toolbox" Height="480" Width="1200" MinHeight="300" MinWidth="400"
+        Loaded="RelhaxWindow_Loaded" Closing="OnApplicationClose" LocalizeWindow="False" ApplyToolTips="False" ApplyColorSettings="False" ApplyScaling="False">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="390" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*" MinWidth="200"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+        <Grid Grid.Column="2" HorizontalAlignment="Left" Height="100" Margin="179,269,0,0" VerticalAlignment="Top" Width="100"/>
+        <TabControl x:Name="TabController" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged" >
+            <TabItem x:Name="AuthStatusTab" Header="Authorization Status">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock x:Name="PasswordLabel" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Please enter password to use this tool" VerticalAlignment="Top"/>
+                    <TextBox x:Name="PaswordTextbox" HorizontalAlignment="Stretch" Height="46" Margin="10,26,10,0" TextWrapping="Wrap" VerticalAlignment="Top" KeyDown="PaswordTextbox_KeyDown"/>
+                    <Button x:Name="LoadPasswordFromTextButton" Content="From above textbox" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Width="129" Click="LoadPasswordFromText_Click"/>
+                    <TextBlock x:Name="AuthStatusTextblock" HorizontalAlignment="Left" Margin="224,80,0,0" TextWrapping="Wrap" Text="Current status: Denied" VerticalAlignment="Top" Foreground="#FFEE1111" Width="150"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" Text="Without the password, the only sections available are MD5 generation and database output." VerticalAlignment="Top" Width="364" Height="38"/>
+                    <Button x:Name="LoadPasswordFromFileButton" Content="From file" HorizontalAlignment="Left" Margin="144,78,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="LoadPasswordFromFileButton_Click"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="UpdateDatabaseV2Tab" Header="Update Database">
+                <Grid Background="#FFE5E5E5">
+                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBox x:Name="UpdateDatabaseV2Step0" Height="23" TextWrapping="Wrap" Text="Step 0: Pull latest database!!!"
+                                 TextAlignment="Left" IsReadOnly="True"/>
+                        <Button x:Name="UpdateDatabaseV2Step1" Content="Step 1: Load database" HorizontalContentAlignment="Left" Click="OnLoadModInfo"/>
+                        <Button x:Name="UpdateDatabaseV2Step2" Content="Step 2: Update FTP server database via PHP script" HorizontalContentAlignment="Left"
+                                Click="UpdateDatabaseV2Step2_Click"/>
+                        <Button x:Name="UpdateDatabaseV2Step3" Content="Step 3: Prepare database update" HorizontalContentAlignment="Left"
+                                Click="UpdateDatabaseV2Step3_Click"/>
+                        <Button x:Name="UpdateDatabaseV2Step4" Content="Step 4: Upload changed" HorizontalContentAlignment="Left"
+                                Click="UpdateDatabaseV2Step4_Click"/>
+                        <Button x:Name="UpdateDatabaseV2Step5" Content="Step 5: Run script CreateModInfo.php"
+                                HorizontalContentAlignment="Left" Click="RunPhpScriptCreateModInfo"/>
+                        <Button x:Name="UpdateDatabaseV2Step6" Content="Step 6: Run script CreateManagerInfo.php"
+                                HorizontalContentAlignment="Left" Click="RunPhpScriptCreateManagerInfo"/>
+                        <TextBox x:Name="UpdateDatabaseV2Step7" Height="35" TextWrapping="Wrap"
+                                 Text="Step 7: Commit repository changes update with message: &quot;Published Database&quot;" IsReadOnly="True"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="UpdateDatabaseV2Step8" Height="23" TextWrapping="Wrap" Text="Step 8: Post database update on discord/forums" Margin="0,0,5,0" IsReadOnly="True"/>
+                            <Button x:Name="UpdateDatabaseV2Step8_NA_ENG" Content="NA"  Margin="0,0,0,0" Click="UpdateDatabasestep8_NA_ENG_Click"/>
+                            <Button x:Name="UpdateDatabaseV2Step8_EU_ENG" Content="EU ENG"  Margin="5,0,0,0" Click="UpdateDatabaseStep8_EU_ENG_Click"/>
+                            <Button x:Name="UpdateDatabaseV2Step8_EU_GER" Content="EU GER"  Margin="5,0,0,0" Click="UpdateDatabaseStep8_EU_GER_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="UpdateApplicationV2Tab" Header="Update Application">
+                <Grid Background="#FFE5E5E5">
+                    <StackPanel>
+                        <TextBox x:Name="UpdateApplicationV2Step0"  Height="23" TextWrapping="Wrap" Text="Step 0: Verify Application Works, is number updated"/>
+                        <TextBox x:Name="UpdateApplicationV2Step1"  Height="23" TextWrapping="Wrap" Text="Step 1: Modify setting for beta, create and sign beta version"/>
+                        <TextBox x:Name="UpdateApplicationV2Step2"  Height="23" TextWrapping="Wrap" Text="Step 2: Modify setting for stable, create and sign stable version"/>
+                        <TextBox x:Name="UpdateApplicationV2Step3"  Height="23" TextWrapping="Wrap" Text="Step 3: Update virustotal.com link"/>
+                        <TextBox x:Name="UpdateApplicationV2Step4"  Height="23" TextWrapping="Wrap" Text="Step 4: Update on github"/>
+                        <TextBox x:Name="UpdateApplicationV2Step6"  Height="23" TextWrapping="Wrap" Text="Step 6: Update manager_info.xml file in database repo and commit"/>
+                        <Button x:Name="UpdateApplicationV2Step7a"  Content="Step 7a: Upload RelhaxModpack.exe" HorizontalContentAlignment="Left" Click="UpdateApplicationV2UploadApplicationStable"/>
+                        <Button x:Name="UpdateApplicationV2Step7b"  Content="Step 7b: Upload RelhaxModpackBeta.exe" HorizontalContentAlignment="Left" Click="UpdateApplicationV2UploadApplicationBeta"/>
+                        <Button x:Name="UpdateApplicationV2Step8"   Content="Step 8: Upload manager_info.xml" HorizontalContentAlignment="Left" Click="UpdateApplicationV2UploadManagerInfo"/>
+                        <Button x:Name="UpdateApplicationV2Step9"   Content="Step 9: Run script CreateUpdatePackages.php" HorizontalContentAlignment="Left" Click="UpdateApplicationV2CreateUpdatePackages"/>
+                        <Button x:Name="UpdateApplicationV2Step10"  Content="Step 10: Run script CreateManagerInfo.php" HorizontalContentAlignment="Left" Click="UpdateApplicationV2CreateManagerInfoBigmods"/>
+                        <TextBox x:Name="UpdateApplicationV2Step11" Height="23" TextWrapping="Wrap" Text="Step 11: Post update notes on discord and forums"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="CleanZipFoldersTab" Header="Clean Zip folders">
+                <Grid Background="#FFE5E5E5">
+                    <StackPanel>
+                        <Button x:Name="CleanFoldersOnlineStep1" Content="Step 1: Parse online folders via supported__clients.xml" HorizontalContentAlignment="Left" Click="CleanFoldersOnlineStep1_Click"/>
+                        <ComboBox x:Name="CleanFoldersOnlineStep2b"/>
+                        <Button x:Name="CleanFoldersOnlineStep2" Content="Step 2: Get list of trash files" HorizontalContentAlignment="Left" Click="CleanFoldersOnlineStep2_Click"/>
+                        <Button x:Name="CleanFoldersOnlineStep3" Content="Step 3: Confirm start Process to delete old zip files" HorizontalContentAlignment="Left" Click="CleanFoldersOnlineStep3_Click"/>
+                        <Button x:Name="CleanFoldersOnlineCancelStep3" Content="Cancel Process" HorizontalContentAlignment="Left" Visibility="Hidden" Click="CleanFoldersOnlineCancel_Click"/>
+                        <TextBlock x:Name="CleanZipFoldersListHeader" Text="List of files to be deleted" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBox x:Name="CleanZipFoldersTextbox" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" Margin="1,118,1,5" TextWrapping="NoWrap" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="DatabaseOutputTab" Header="Database Output">
+                <Grid Background="#FFE5E5E5">
+                    <StackPanel >
+                        <Button x:Name="DatabaseOutputStep1" Content="Step 1: Load database" HorizontalContentAlignment="Left" Click="OnLoadModInfo"/>
+                        <Button x:Name="DatabaseOutputStep2a" Content="Step 2a: Generate internal spreadsheet (csv)" HorizontalContentAlignment="Left" Click="DatabaseOutputStep2a_Click"/>
+                        <Button x:Name="DatabaseOutputStep2b" Content="Step 2b: Generate user spreadsheet (csv)" HorizontalContentAlignment="Left" Click="DatabaseOutputStep2b_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="GenerateHashesTab" Header="Generate MD5">
+                <Grid Background="#FFE5E5E5">
+                    <StackPanel >
+                        <Button x:Name="GenerateMD5Button" Content="Load files to hash" Click="GenerateMD5Button_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="StatisticsToolsTab" Header="Other DB Tools">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderThickness="1" BorderBrush="Black" Margin="1">
+                        <StackPanel Orientation="Vertical">
+                            <Button x:Name="DatabaseStatsSave" Click="DatabaseStatsSave_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,2,2,0">
+                                <TextBlock Text="Save live stats to FTP folder with new name" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="DatabaseStatsUpdateCurrent" Click="DatabaseStatsUpdateCurrent_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,2,2,0">
+                                <TextBlock Text="Update live stats with new packageNames" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="DatabaseStatsMakeNew" Click="DatabaseStatsMakeNew_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,2,2,0">
+                                <TextBlock Text="Create new stats with new packageNames (overwrite live)" TextWrapping="Wrap"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Margin="1" Grid.Column="1">
+                        <StackPanel Orientation="Vertical">
+                            <Button x:Name="AnotherLoadDatabaseButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Grid.Column="1" Click="AnotherLoadDatabaseButton_Click">
+                                <TextBlock Text="Load Database (V2)" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="DatabaseDuplicatePNsCheck" Grid.Column="1" Margin="0,2,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="DatabaseDuplicatePNsCheck_Click">
+                                <TextBlock Text="Check for duplicate PackageNames" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="DatabaseDuplicateUIDsCheck" Grid.Column="1" Margin="0,2,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="DatabaseDuplicateUIDsCheck_Click">
+                                <TextBlock Text="Check for duplicate UIDs" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="AddMissingUIDs" Grid.Column="1" Margin="0,2,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="AddMissingUIDs_Click">
+                                <TextBlock Text="Check for missing and assign new UIDs" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="SaveDatabaseDuplicateCheckButton" Grid.Column="1" Margin="0,2,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="SaveDatabaseDuplicateCheckButton_Click">
+                                <TextBlock Text="Save Database (V2)" TextWrapping="Wrap"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Margin="1" Grid.Column="0" Grid.Row="1">
+                        <StackPanel Orientation="Vertical">
+                            <Button x:Name="LoadDatabaseUpdateSupportedClientsButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="LoadDatabaseUpdateSupportedClientsButton_Click">
+                                <TextBlock Text="Load Database (V2)" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="LoadSupportedClientsDocumentButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="LoadSupportedClientsDocumentButton_Click">
+                                <TextBlock Text="Load Supported Clients xml" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="CheckClientsToRemoveFromDocumentButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="CheckClientsToRemoveFromDocumentButton_Click">
+                                <TextBlock Text="Remove clients from xml and server" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="CheckClientsToAddToDocumentButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="CheckClientsToAddToDocumentButton_Click">
+                                <TextBlock Text="Add clients to and upload supported_clients.xml" TextWrapping="Wrap"/>
+                            </Button>
+                            <Button x:Name="RunScriptCreateModInfo" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="RunPhpScriptCreateModInfo">
+                                <TextBlock Text="Run script CreateManagerInfo.php"/>
+                            </Button>
+                            <Button x:Name="RunScriptCreateManagerInfo" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="RunPhpScriptCreateManagerInfo">
+                                <TextBlock Text="Run script CreateModInfo.php"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Margin="1" Grid.Column="1" Grid.Row="1">
+                        <StackPanel Orientation="Vertical">
+                            <Button x:Name="WriteTranslationsToCsvButton" HorizontalAlignment="Stretch" Margin="0,2,2,0" VerticalAlignment="Top" Click="WriteTranslationsToCsvButton_Click">
+                                <TextBlock Text="Create CSV of Translations"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <TextBox x:Name="LogOutput" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,0,0,30" TextWrapping="Wrap" VerticalAlignment="Stretch"
+                 VerticalScrollBarVisibility="Visible" TextChanged="LogOutput_TextChanged" IsReadOnly="True"/>
+        <Button x:Name="ClearLogButton" Content="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Grid.Column="2" Click="ClearLogButton_Click" Margin="0,0,5,5"/>
+        <ProgressBar x:Name="JobProgressBar" Grid.Column="2" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Bottom" Maximum="100" Minimum="0" Value="0" Margin="0,0,85,5" />
+    </Grid>
+</local:RelhaxWindow>

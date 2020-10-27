@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RelhaxModpack.Windows"
-        xmlns:ui="clr-namespace:RelhaxModpack.UIComponents"
+        xmlns:ui="clr-namespace:RelhaxModpack.UI"
         mc:Ignorable="d"
-        Title="Application Update" Height="315" Width="500" ResizeMode="CanMinimize" Icon="/RelhaxModpack;component/Resources/modpack_icon.ico" Loaded="RelhaxWindow_Loaded"
+        Title="Application Update" Height="450" Width="715" ResizeMode="CanResize" MinHeight="315" MinWidth="500" Icon="/RelhaxModpack;component/Resources/modpack_icon.ico" Loaded="RelhaxWindow_Loaded"
         LocalizeWindow="True" ApplyToolTips="False" ApplyColorSettings="True" ApplyScaling="True">
     <Grid Tag="VersionInfoGrid">
         <TextBlock x:Name="NewVersionAvailable" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="New Version Available" VerticalAlignment="Top" Tag="NewVersionAvailable"/>

@@ -1,14 +1,18 @@
 ﻿<local:RelhaxWindow
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RelhaxModpack.Windows"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-        xmlns:RelhaxModpack="clr-namespace:RelhaxModpack" x:Name="relhaxWindow" x:Class="RelhaxModpack.Windows.DatabaseEditor"
-        mc:Ignorable="d"
-        Title="DatabaseEditor" Height="720" Width="1280" MinHeight="480" MinWidth="640" Icon="/RelhaxModpack;component/Resources/modpack_icon.ico"
-        Loaded="OnApplicationLoad" Closing="RelhaxWindow_Closing" LocalizeWindow="False" ApplyToolTips="False" ApplyColorSettings="False" ApplyScaling="False">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:RelhaxModpack.Windows"
+    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    xmlns:RelhaxModpack="clr-namespace:RelhaxModpack"
+    xmlns:database="clr-namespace:RelhaxModpack.Database"
+    xmlns:enums="clr-namespace:RelhaxModpack.Utilities.Enums"
+    x:Name="relhaxWindow"
+    x:Class="RelhaxModpack.Windows.DatabaseEditor"
+    mc:Ignorable="d"
+    Title="DatabaseEditor" Height="720" Width="1280" MinHeight="600" MinWidth="800" Icon="/RelhaxModpack;component/Resources/modpack_icon.ico"
+    Loaded="OnApplicationLoad" Closing="RelhaxWindow_Closing" LocalizeWindow="False" ApplyToolTips="False" ApplyColorSettings="False" ApplyScaling="False">
     <local:RelhaxWindow.Resources>
         <!-- https://stackoverflow.com/questions/8198645/wpf-combobox-performance-problems-by-binding-a-large-collections -->
         <ItemsPanelTemplate x:Key="VSP">
@@ -406,12 +410,6 @@
                             <Slider x:Name="FtpUpDownAutoCloseTimoutSlider" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="True" ValueChanged="FtpUpDownAutoCloseTimoutSlider_ValueChanged" IsSnapToTickEnabled="True"/>
                             <TextBlock x:Name="FtpUpDownAutoCloseTimoutDisplayLabel" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="Test" Grid.Column="1"/>
                         </Grid>
-                        <TextBlock x:Name="SaveAsDatabaseType" HorizontalAlignment="Stretch"  Grid.Row="9" TextWrapping="Wrap" Text="&quot;Save&quot;/&quot;Save as&quot; buttons save as database type:" VerticalAlignment="Center"
-                                   ToolTip="As of writing this tooltip, this setting should be kept on &quot;1.1&quot;"/>
-                        <StackPanel HorizontalAlignment="Left" Grid.Column="1" Grid.Row="9" VerticalAlignment="Center">
-                            <RadioButton x:Name="SaveDatabaseLegacySetting" Content="Legacy" Checked="SaveDatabaseSetting_Checked" />
-                            <RadioButton x:Name="SaveDatabaseOnePointOneSetting" Content="1.1" Checked="SaveDatabaseSetting_Checked" />
-                        </StackPanel>
                         <Button x:Name="SelectAutoUpdateWorkDirectoryButton" HorizontalAlignment="Stretch" Grid.Row="10" VerticalAlignment="Center" Click="SelectAutoUpdateWorkDirectoryButton_Click"
                                 ToolTip="Select the folder to use for the auto update feature (work in progress)">
                             <TextBlock x:Name="SelectAutoUpdateWorkDirectoryTextblock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"
@@ -485,7 +483,15 @@
                             <RowDefinition Height="20"/>
                             <RowDefinition Height="20"/>
                             <RowDefinition Height="20"/>
+                            <!-- Patch Group -->
                             <RowDefinition Height="20"/>
+                            <!-- UID -->
+                            <RowDefinition Height="20"/>
+                            <!-- Tree Level -->
+                            <RowDefinition Height="20"/>
+                            <!-- Calculated Level -->
+                            <RowDefinition Height="20"/>
+                            <!-- Last Updated -->
                             <RowDefinition Height="20"/>
                             <!-- spacer -->
                             <RowDefinition Height="20"/>
@@ -508,6 +514,7 @@
                             <!-- extra space -->
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <!-- Names -->
                         <TextBlock x:Name="PackageDisplayNameTextBlock" HorizontalAlignment="Stretch" Grid.Row="1" TextWrapping="Wrap" Text="Name" VerticalAlignment="Center"/>
                         <TextBlock x:Name="PackageNameTextBlock" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" Text="Package Name" VerticalAlignment="Center"/>
                         <TextBlock x:Name="PackageStartAddressTextBlock" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" Text="Start Address" VerticalAlignment="Center"/>
@@ -515,11 +522,16 @@
                         <TextBlock x:Name="PackageEndAddressTextBlock" HorizontalAlignment="Stretch" Grid.Row="5" TextWrapping="Wrap" Text="End Address" VerticalAlignment="Center"/>
                         <TextBlock x:Name="PackageVersionTextBlock" HorizontalAlignment="Stretch" Grid.Row="6" TextWrapping="Wrap" Text="Version" VerticalAlignment="Center"/>
                         <TextBlock x:Name="PackageAuthorTextBlock" HorizontalAlignment="Stretch" Grid.Row="7" TextWrapping="Wrap" Text="Author" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="PakageTypeTextBlock" HorizontalAlignment="Stretch" Grid.Row="8" TextWrapping="Wrap" Text="Type" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="PackageInstallGroupTextBlock" HorizontalAlignment="Stretch" Grid.Row="9" TextWrapping="Wrap" Text="Install Group" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="PackagePatchGroupTextBlock" HorizontalAlignment="Stretch" Grid.Row="10" TextWrapping="Wrap" Text="Patch Group" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="PackageLevelTextBlock" HorizontalAlignment="Stretch" Grid.Row="11" TextWrapping="Wrap" Text="Level:" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="PackagLastUpdatedTextBlock" HorizontalAlignment="Stretch" Grid.Row="12" TextWrapping="Wrap" Text="Last Updated:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PackageMaintainersTextBlock" HorizontalAlignment="Stretch" Grid.Row="8" TextWrapping="Wrap" Text="Maintainers" VerticalAlignment="Center" ToolTip="Comma separated values of Database managers of this component"/>
+                        <TextBlock x:Name="PakageTypeTextBlock" HorizontalAlignment="Stretch" Grid.Row="9" TextWrapping="Wrap" Text="Type" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PackageInstallGroupTextBlock" HorizontalAlignment="Stretch" Grid.Row="10" TextWrapping="Wrap" Text="Install Group" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PackagePatchGroupTextBlock" HorizontalAlignment="Stretch" Grid.Row="11" TextWrapping="Wrap" Text="Patch Group" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PackageUidTextBlock" HorizontalAlignment="Stretch" Grid.Row="12" TextWrapping="Wrap" Text="UID:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PackageLevelTextBlock" HorizontalAlignment="Stretch" Grid.Row="13" TextWrapping="Wrap" Text="Tree Level:" VerticalAlignment="Center" ToolTip="The sublevel in the category tree where this package exists"/>
+                        <TextBlock x:Name="PackageCalculatedLevelTextBlock" HorizontalAlignment="Stretch" Grid.Row="14" TextWrapping="Wrap" Text="Calculated Level:" VerticalAlignment="Center"
+                                   ToolTip="The calculated sublevel during installation, if 'Offset InstallGroup' for the category is enabled"/>
+                        <!-- Values -->
+                        <TextBlock x:Name="PackagLastUpdatedTextBlock" HorizontalAlignment="Stretch" Grid.Row="15" TextWrapping="Wrap" Text="Last Updated:" VerticalAlignment="Center"/>
                         <TextBox x:Name="PackageNameDisplay" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1"  TextWrapping="Wrap" VerticalAlignment="Center" />
                         <TextBox x:Name="PackagePackageNameDisplay" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1"  TextWrapping="Wrap" VerticalAlignment="Center" />
                         <TextBox x:Name="PackageStartAddressDisplay" HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="1"  TextWrapping="Wrap" VerticalAlignment="Center" />
@@ -527,40 +539,42 @@
                         <TextBox x:Name="PackageEndAddressDisplay" HorizontalAlignment="Stretch" Grid.Row="5" Grid.Column="1"  TextWrapping="Wrap" VerticalAlignment="Center" />
                         <TextBox x:Name="PackageVersionDisplay" HorizontalAlignment="Stretch" Grid.Row="6" Grid.Column="1"  TextWrapping="Wrap" VerticalAlignment="Center" />
                         <TextBox x:Name="PackageAuthorDisplay" HorizontalAlignment="Stretch" Grid.Row="7" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" />
-                        <ComboBox x:Name="PackageTypeDisplay" HorizontalAlignment="Stretch" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
-                            <RelhaxModpack:SelectionTypes>none</RelhaxModpack:SelectionTypes>
-                            <RelhaxModpack:SelectionTypes>single1</RelhaxModpack:SelectionTypes>
-                            <RelhaxModpack:SelectionTypes>single_dropdown1</RelhaxModpack:SelectionTypes>
-                            <RelhaxModpack:SelectionTypes>single_dropdown2</RelhaxModpack:SelectionTypes>
-                            <RelhaxModpack:SelectionTypes>multi</RelhaxModpack:SelectionTypes>
+                        <TextBox x:Name="PackageMaintainersDisplay" HorizontalAlignment="Stretch" Grid.Row="8" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" ToolTip="Comma separated values of Database managers of this component"/>
+                        <ComboBox x:Name="PackageTypeDisplay" HorizontalAlignment="Stretch" Grid.Row="9" Grid.Column="1" VerticalAlignment="Center">
+                            <enums:SelectionTypes>none</enums:SelectionTypes>
+                            <enums:SelectionTypes>single1</enums:SelectionTypes>
+                            <enums:SelectionTypes>single_dropdown1</enums:SelectionTypes>
+                            <enums:SelectionTypes>single_dropdown2</enums:SelectionTypes>
+                            <enums:SelectionTypes>multi</enums:SelectionTypes>
                         </ComboBox>
-                        <ComboBox x:Name="PackageInstallGroupDisplay" HorizontalAlignment="Stretch" Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" IsEditable="True"/>
-                        <ComboBox x:Name="PackagePatchGroupDisplay" HorizontalAlignment="Stretch" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center" IsEditable="True"/>
-                        <TextBlock x:Name="PackageLevelDisplay" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="11" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
-                        <TextBlock x:Name="PackageLastUpdatedDisplay" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="0" Grid.Row="14" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                        <ComboBox x:Name="PackageInstallGroupDisplay" HorizontalAlignment="Stretch" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center" IsEditable="True"/>
+                        <ComboBox x:Name="PackagePatchGroupDisplay" HorizontalAlignment="Stretch" Grid.Row="11" Grid.Column="1" VerticalAlignment="Center" IsEditable="True"/>
+                        <TextBlock x:Name="PackageUidDisplay" HorizontalAlignment="Stretch" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center" IsEnabled="True"/>
+                        <TextBlock x:Name="PackageLevelDisplay" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="13" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+                        <TextBlock x:Name="PackageCalculatedLevelDisplay" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="14" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+                        <TextBlock x:Name="PackageLastUpdatedDisplay" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="15" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="0" Grid.Row="17" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
                             <CheckBox Content="Log At Install" Tag="LogAtInstallCB" x:Name="PackageLogAtInstallDisplay"/>
                             <CheckBox Content="Show In Search" x:Name="PackageShowInSearchListDisplay" Tag="PopularModCB" Margin="8,0,0,0"/>
+                            <CheckBox Content="Popular" x:Name="PackagePopularModDisplay" Tag="PopularModCB" Margin="23,0,0,0"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="0" Grid.Row="15" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
-                            <CheckBox Content="Popular" x:Name="PackagePopularModDisplay" Tag="PopularModCB" Margin="0,0,0,0"/>
-                            <CheckBox Content="Grey Area" x:Name="PackageGreyAreaModDisplay" Tag="PackageGreyAreaModDisplay" Margin="37,0,0,0"/>
+                        <StackPanel Grid.Column="0" Grid.Row="18" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                            <CheckBox Content="Grey Area" x:Name="PackageGreyAreaModDisplay" Tag="PackageGreyAreaModDisplay" Margin="0,0,0,0"/>
+                            <CheckBox Content="Visible" x:Name="PackageVisibleDisplay" Tag="VisibleCB" Margin="25,0,0,0"/>
+                            <CheckBox Content="Enabled" x:Name="PackageEnabledDisplay" Tag="EnabledCB" Margin="69,0,0,0"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="0" Grid.Row="16" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
-                            <CheckBox Content="Visible" x:Name="PackageVisibleDisplay" Tag="VisibleCB" Margin="0,0,0,0"/>
-                            <CheckBox Content="Enabled" x:Name="PackageEnabledDisplay" Tag="EnabledCB" Margin="42,0,0,0"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="0" Grid.Row="17" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                        <StackPanel Grid.Column="0" Grid.Row="19" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
                             <CheckBox Content="Obfuscated" x:Name="PackageObfuscatedModDisplay" Tag="ObfuscatedCB" Margin="0,0,0,0"/>
                             <CheckBox Content="Offset InstallGroup" x:Name="CategoryOffsetInstallGroupDisplay" Tag="OffsetInstallGroupCB" Margin="16,0,0,0"/>
+                            <CheckBox Content="From WGmods" x:Name="PackageFromWGmodsDisplay" Tag="PackageFromWGmodsCB" Margin="4,0,0,0"/>
                         </StackPanel>
-                        <Button Grid.Column="0" Grid.Row="19" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="Download Zip" x:Name="ZipDownload" Tag="ZipDownload" Click="ZipDownload_Click" Grid.ColumnSpan="2" Width="200" />
-                        <Button Grid.Column="0" Grid.Row="21" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="Upload Zip" x:Name="ZipUload" Tag="ZipUpload" Click="ZipUpload_Click" Grid.ColumnSpan="2" Width="200" />
+                        <Button Grid.Column="0" Grid.Row="22" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="Download Zip" x:Name="ZipDownload" Tag="ZipDownload" Click="ZipDownload_Click" Grid.ColumnSpan="2" Width="200" />
+                        <Button Grid.Column="0" Grid.Row="24" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="Upload Zip" x:Name="ZipUload" Tag="ZipUpload" Click="ZipUpload_Click" Grid.ColumnSpan="2" Width="200" />
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DescriptionTab" Header="Description">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageDescriptionDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True"/>
+                        <TextBox x:Name="PackageDescriptionDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DevURLTab" Header="Dev URL">
@@ -572,24 +586,25 @@
                 </TabItem>
                 <TabItem x:Name="InternalNotesTab" Header="Internal Notes">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageInternalNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True"/>
+                        <TextBox x:Name="PackageInternalNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="UpdateNotesTab" Header="Update Notes">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageUpdateNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True"/>
+                        <TextBox x:Name="PackageUpdateNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DependenciesTab" Header="Dependencies">
                     <Grid Background="#FFE5E5E5">
-                        <ListBox x:Name="PackageDependenciesDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top" SelectionChanged="PackageDependenciesDisplay_SelectionChanged" />
+                        <ListBox x:Name="PackageDependenciesDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top" SelectionChanged="PackageDependenciesDisplay_SelectionChanged" DisplayMemberPath="PackageName"
+                                 MouseDoubleClick="PackageDependenciesDisplay_MouseDoubleClick"/>
                         <Button Content="Add selected" x:Name="DependenciesAddSelected" Tag="DependenciesAddSelected" HorizontalAlignment="Left" Margin="0,210,0,0" VerticalAlignment="Top" Width="400" Click="DependenciesAddSelected_Click"/>
                         <Button Content="Remove Selected" x:Name="DependenciesRemoveSelected" Tag="DependenciesRemoveSelected" HorizontalAlignment="Left" Margin="0,235,0,0" VerticalAlignment="Top" Width="400" Click="DependenciesRemoveSelected_Click"/>
-                        <ComboBox x:Name="LoadedDependenciesList" HorizontalAlignment="Stretch" Margin="0,184,0,0" VerticalAlignment="Top" Height="20"/>
+                        <ComboBox x:Name="LoadedDependenciesList" HorizontalAlignment="Stretch" Margin="0,184,0,0" VerticalAlignment="Top" Height="22"/>
                         <TextBlock x:Name="DependenciesLogicTypeTextBlock" HorizontalAlignment="Left" Margin="0,260,0,0" TextWrapping="Wrap" Text="With Logic Type:" VerticalAlignment="Top"/>
                         <ComboBox x:Name="LoadedLogicsList" HorizontalAlignment="Left" Margin="0,281,0,0" VerticalAlignment="Top" Width="400">
-                            <RelhaxModpack:Logic>OR</RelhaxModpack:Logic>
-                            <RelhaxModpack:Logic>AND</RelhaxModpack:Logic>
+                            <database:Logic>OR</database:Logic>
+                            <database:Logic>AND</database:Logic>
                         </ComboBox>
                         <CheckBox x:Name="DependenciesNotFlag" Content="Set Not Flag" HorizontalAlignment="Left" Margin="0,308,0,0" VerticalAlignment="Top"/>
                         <Button Content="Apply Edit" x:Name="DependenciesApplyEditButton" Tag="DependenciesRemoveSelected" HorizontalAlignment="Left" Margin="0,323,0,0" VerticalAlignment="Top" Width="400" Click="DependenciesApplyEditButton_Click"/>
@@ -602,10 +617,10 @@
                         <Button Content="Apply Edit" x:Name="MediaApplyEditButton" Tag="MediaApplyEditButton" HorizontalAlignment="Left" Margin="230,511,0,0" VerticalAlignment="Top" Width="100" Click="MediaApplyEditButton_Click"/>
                         <Button Content="Remove Media" x:Name="MediaRemoveMediaButton" Tag="MediaRemoveMediaButton" HorizontalAlignment="Left" Margin="10,486,0,0" VerticalAlignment="Top" Width="467" Click="MediaRemoveMediaButton_Click"/>
                         <ComboBox x:Name="MediaTypesList" HorizontalAlignment="Left" Margin="0,205,0,0" VerticalAlignment="Top" Width="477" Height="20">
-                            <RelhaxModpack:MediaType>Picture</RelhaxModpack:MediaType>
-                            <RelhaxModpack:MediaType>Webpage</RelhaxModpack:MediaType>
-                            <RelhaxModpack:MediaType>MediaFile</RelhaxModpack:MediaType>
-                            <RelhaxModpack:MediaType>HTML</RelhaxModpack:MediaType>
+                            <enums:MediaType>Picture</enums:MediaType>
+                            <enums:MediaType>Webpage</enums:MediaType>
+                            <enums:MediaType>MediaFile</enums:MediaType>
+                            <enums:MediaType>HTML</enums:MediaType>
                         </ComboBox>
                         <TextBox x:Name="MediaTypesURL" HorizontalAlignment="Stretch" Height="173" Margin="0,258,0,0" VerticalAlignment="Top"
                                  TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
@@ -628,15 +643,61 @@
                 <TabItem x:Name="TriggersTab" Header="Triggers">
                     <Grid Background="#FFE5E5E5">
                         <ListBox x:Name="PackageTriggersDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top" SelectionChanged="PackageTriggersDisplay_SelectionChanged" />
-                        <Button Content="Add selected Trigger" x:Name="TriggerAddSelectedTrigger" Tag="TriggerAddSelectedTrigger" HorizontalAlignment="Left" Margin="0,209,0,0" VerticalAlignment="Top" Width="467" Click="TriggerAddSelectedTrigger_Click"/>
+                        <Button Content="Add Trigger" x:Name="TriggerAddSelectedTrigger" Tag="TriggerAddSelectedTrigger" HorizontalAlignment="Left" Margin="0,209,0,0" VerticalAlignment="Top" Width="467" Click="TriggerAddSelectedTrigger_Click"/>
                         <Button Content="Remove Trigger" x:Name="TriggerRemoveTrigger" Tag="TriggerRemoveTrigger" HorizontalAlignment="Left" Margin="0,234,0,0" VerticalAlignment="Top" Width="467" Click="TriggerRemoveTrigger_Click"/>
                         <ComboBox x:Name="LoadedTriggersComboBox" HorizontalAlignment="Stretch" Margin="0,184,0,0" VerticalAlignment="Top" Height="20"/>
-                        <TextBox x:Name="CurrentSupportedTriggers" HorizontalAlignment="Left" Height="63" Margin="0,478,0,0" TextWrapping="Wrap" Text="Currently Supported Triggers:&#xA;build_contour_icons - start the process of building the contour icons atlas files&#xA;create_shortcuts - start the process of creating the shortcuts" VerticalAlignment="Bottom" Width="487" IsReadOnly="True"/>
+                        <RichTextBox x:Name="CurrentSupportedTriggers" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsReadOnly="True">
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0" />
+                                </Style>
+                            </RichTextBox.Resources>
+                            <FlowDocument>
+                                <Paragraph>Currently Supported Triggers:</Paragraph>
+                                <Paragraph>build_contour_icons - start the process of building the contour icons atlas files</Paragraph>
+                                <Paragraph>create_shortcuts - start the process of creating the shortcuts</Paragraph>
+                                <Paragraph>install_fonts - start the process of installing fonts</Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="TagsTab" Header="Tags">
+                    <Grid Background="#FFE5E5E5">
+                        <ListBox x:Name="PackageTagsDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top"/>
+                        <Button Content="Add Tag" x:Name="TagAddSelectedTag" Tag="TagAddSelectedTag" HorizontalAlignment="Left" Margin="0,209,0,0" VerticalAlignment="Top" Width="467" Click="TagAddSelectedTag_Click"/>
+                        <Button Content="Remove Tag" x:Name="TagRemoveTag" Tag="TagRemoveTag" HorizontalAlignment="Left" Margin="0,234,0,0" VerticalAlignment="Top" Width="467" Click="TagRemoveTag_Click"/>
+                        <ComboBox x:Name="LoadedTagsComboBox" HorizontalAlignment="Stretch" Margin="0,184,0,0" VerticalAlignment="Top" Height="20"/>
+                        <RichTextBox x:Name="CurrentTags" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsReadOnly="True" Height="278">
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0" />
+                                </Style>
+                            </RichTextBox.Resources>
+                            <FlowDocument>
+                                <Paragraph>Current tags:</Paragraph>
+                                <Paragraph>Patch - Patch instructions</Paragraph>
+                                <Paragraph>XmlUnpack - Xml unpack instructions</Paragraph>
+                                <Paragraph>Script - Python scripts</Paragraph>
+                                <Paragraph>Atlas - Pre-built atlas files</Paragraph>
+                                <Paragraph>AtlasBuilder - Atlas png files and/or instructions for building</Paragraph>
+                                <Paragraph>ImagePNG - PNG images</Paragraph>
+                                <Paragraph>ImageDDS - DDS images</Paragraph>
+                                <Paragraph>GuiFlash - Action script shockwave flash (swf) files</Paragraph>
+                                <Paragraph>GuiLoginVideo - Login video files</Paragraph>
+                                <Paragraph>ConfigurationFileXml - Configuration files, xml data type</Paragraph>
+                                <Paragraph>ConfigurationFileJson - Configuration files, json data type</Paragraph>
+                                <Paragraph>ConfigurationFileXC - Configuration files, XVM</Paragraph>
+                                <Paragraph>ConfigurationFileOther - Configuration files, Other</Paragraph>
+                                <Paragraph>SoundBank - Sound bank (bnk/pck) files</Paragraph>
+                                <Paragraph>DependencyLink - The package is a link for dependency, or is a logical link</Paragraph>
+                                <Paragraph>OtherFiles - Misc files</Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="ConflictingPackagesTab" Header="Conflicting Packages">
                     <Grid Background="#FFE5E5E5">
-                        <ListBox x:Name="PackageConflictingPackagesDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top" />
+                        <ListBox x:Name="PackageConflictingPackagesDisplay" HorizontalAlignment="Stretch" Height="179" VerticalAlignment="Top" MouseDoubleClick="PackageConflictingPackagesDisplay_MouseDoubleClick" DisplayMemberPath="ComponentInternalName"/>
                         <Button Content="Remove Conflicting package" x:Name="ConflictingPackagesRemoveConflictingPackage" Tag="ConflictingPackagesButton1" HorizontalAlignment="Left" Margin="0,184,0,0" VerticalAlignment="Top" Width="171" Click="ConflictingPackagesRemoveConflictingPackage_Click"/>
                         <TextBlock x:Name="ConflictingPackagesMessagebox" HorizontalAlignment="Left" Height="20" Margin="0,209,0,0" TextWrapping="Wrap" Text="To add a package to the list, search it above and right click it" VerticalAlignment="Top" />
                     </Grid>

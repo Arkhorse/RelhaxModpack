@@ -8,82 +8,11 @@ using System.Xml;
 using System.Windows;
 using System.Reflection;
 using System.Globalization;
+using RelhaxModpack.Utilities;
+using RelhaxModpack.Utilities.Enums;
 
 namespace RelhaxModpack
 {
-    /// <summary>
-    /// The type of selection view for how to display the selection tree
-    /// </summary>
-    public enum SelectionView
-    {
-        /// <summary>
-        /// OMC style
-        /// </summary>
-        Legacy = 1,
-
-        /// <summary>
-        /// Default WPF V2 style
-        /// </summary>
-        DefaultV2 = 0
-    };
-
-    /// <summary>
-    /// The types on uninstall mods the application supports
-    /// </summary>
-    public enum UninstallModes
-    {
-        /// <summary>
-        /// Default uninstall method to uninstall all modifications done by the application
-        /// </summary>
-        Default = 0,
-
-        /// <summary>
-        /// Quick uninstall method to remove 
-        /// </summary>
-        Quick = 1
-    }
-    /// <summary>
-    /// Database distribution levels
-    /// </summary>
-    public enum DatabaseVersions
-    {
-        /// <summary>
-        /// The stable public database
-        /// </summary>
-        Stable,
-
-        /// <summary>
-        /// The unstable public beta database
-        /// </summary>
-        Beta,
-
-        /// <summary>
-        /// The unstable private testing database.
-        /// </summary>
-        Test
-    }
-
-    /// <summary>
-    /// The list of different types of themes in the application
-    /// </summary>
-    public enum UIThemes
-    {
-        /// <summary>
-        /// The default application theme
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// The dark application theme
-        /// </summary>
-        Dark,
-
-        /// <summary>
-        /// A custom application theme from the UISettings.xml
-        /// </summary>
-        Custom
-    }
-
     /// <summary>
     /// Provides access to all settings used in the modpack.
     /// </summary>
@@ -97,7 +26,8 @@ namespace RelhaxModpack
             //put blacklist fields here
             nameof(PropertiesToExclude)
         };
-        #region Saveable modpack settings
+
+        #region Save-able modpack settings
         /// <summary>
         /// The custom path to the ModInfo.xml file if loading in test mode
         /// </summary>
@@ -113,6 +43,11 @@ namespace RelhaxModpack
         /// Flag to track when/if the user has MSVCP2013 installed to load the atlas image processing libraries
         /// </summary>
         public static bool AtlasLibrariesCanBeLoaded = false;
+
+        /// <summary>
+        /// Show a warning (once) if the user launched the application right from the downloads folder
+        /// </summary>
+        public static bool InformIfApplicationInDownloadsFolder = true;
 
         /// <summary>
         /// Toggle if the program should notify the user if the database version is the same as the last installed version
@@ -153,6 +88,11 @@ namespace RelhaxModpack
         /// A one time run bool to display a message about how to use user mods
         /// </summary>
         public static bool DisplayUserModsWarning = true;
+
+        /// <summary>
+        /// A one time run bool to display a message about how the user can right click a selection to get a preview window
+        /// </summary>
+        public static bool DisplaySelectionPreviewMessage = true;
 
         /// <summary>
         /// Toggle if the application should use debug level logging or just info
@@ -286,6 +226,16 @@ namespace RelhaxModpack
         public static bool AutoOneclickShowWarningOnSelectionsFail = false;
 
         /// <summary>
+        /// Toggle if the application should apply a custom font to the MainWindow and all windows of RelhaxWindow with 
+        /// </summary>
+        public static bool EnableCustomFont = false;
+
+        /// <summary>
+        /// Flag to enable a check if the user is running the minimum required .NET Framework version for this application
+        /// </summary>
+        public static bool ValidFrameworkVersion = false;
+
+        /// <summary>
         /// The time, in a specified unit, to check for anew data base version
         /// </summary>
         public static int AutoInstallFrequencyInterval = 10;
@@ -335,6 +285,12 @@ namespace RelhaxModpack
         /// </summary>
         /// <remarks>Used for both auto and one click installation modes</remarks>
         public static string AutoOneclickSelectionFilePath = string.Empty;
+
+        /// <summary>
+        /// The name of the font to use for the MainWindow and all windows that are of RelhaxWindow type
+        /// </summary>
+        /// <remarks>If the font name is not found in the system folder, this is reset to empty</remarks>
+        public static string CustomFontName = string.Empty;
 
         /// <summary>
         /// The Uninstall mode to use when uninstalling or installing with the clean install option
@@ -426,7 +382,7 @@ namespace RelhaxModpack
                         ModSelectionView = (SelectionView)int.Parse(setting.InnerText);
                         break;
                     case "BetaApplication":
-                        if(Utils.ParseBool(setting.InnerText, false))
+                        if(CommonUtils.ParseBool(setting.InnerText, false))
                         {
                             ApplicationDistroVersion = ApplicationVersions.Beta;
                         }
@@ -436,7 +392,7 @@ namespace RelhaxModpack
                         }
                         break;
                     case "BetaDatabase":
-                        if (Utils.ParseBool(setting.InnerText, false))
+                        if (CommonUtils.ParseBool(setting.InnerText, false))
                         {
                             DatabaseDistroVersion = DatabaseVersions.Beta;
                         }
@@ -446,10 +402,10 @@ namespace RelhaxModpack
                         }
                         break;
                     case "SuperExtraction":
-                        MulticoreExtraction = Utils.ParseBool(setting.InnerText, false);
+                        MulticoreExtraction = CommonUtils.ParseBool(setting.InnerText, false);
                         break;
                     case "InstantExtraction":
-                        InstallWhileDownloading = Utils.ParseBool(setting.InnerText, false);
+                        InstallWhileDownloading = CommonUtils.ParseBool(setting.InnerText, false);
                         break;
                 }
             }

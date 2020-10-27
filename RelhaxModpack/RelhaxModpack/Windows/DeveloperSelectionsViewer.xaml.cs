@@ -13,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Net;
 using System.IO;
 using System.Xml;
-using RelhaxModpack.UIComponents;
+using RelhaxModpack.UI;
+using RelhaxModpack.Xml;
+using RelhaxModpack.Utilities.Enums;
 
 namespace RelhaxModpack.Windows
 {
@@ -113,7 +115,6 @@ namespace RelhaxModpack.Windows
                 RadioButton selectionButton = new RadioButton()
                 {
                     Content = node.Attributes["displayName"],
-                    ToolTip = Translations.GetTranslatedString("lastModified") + ": " + node.Attributes["lastModified"],
                     Tag = node.InnerText,
                     IsChecked = firstOne,
                     Style = (Style)Application.Current.Resources["RelhaxRadioButtonStyle"]
