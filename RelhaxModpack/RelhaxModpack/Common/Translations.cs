@@ -532,6 +532,7 @@ namespace RelhaxModpack
             French.Add("yes", "Oui");
             Spanish.Add("yes", "Sí");
             Russian.Add("yes", "Да");
+            CaveMan.Add("yes", "yes");
 
             // Decline button used in multiple places.
             // REFERRERS: VersionInfoNoButton;
@@ -541,6 +542,7 @@ namespace RelhaxModpack
             French.Add("no", "Non");
             Spanish.Add("no", "No");
             Russian.Add("no", "Нет");
+            CaveMan.Add("no", "no");
 
             // Cancel button (phrase) used in multiple places.
             // REFERRERS: CancelDownloadInstallButton; CancelButtonLabel; DeveloperSelectionsCancelButton; ExportCancelButton; GcDownloadStep4DownloadingCancelButton;
@@ -550,6 +552,7 @@ namespace RelhaxModpack
             French.Add("cancel", "Annuler");
             Spanish.Add("cancel", "Cancelar");
             Russian.Add("cancel", "Отмена");
+            CaveMan.Add("cancel", "Cancel")
 
             English.Add("delete", "Delete");
             German.Add("delete", "Löschen");
@@ -557,6 +560,7 @@ namespace RelhaxModpack
             French.Add("delete", "Supprimer");
             Spanish.Add("delete", "Eliminar");
             Russian.Add("delete", "Удалить");
+            CaveMan.Add("delete", "Delete");
 
             English.Add("warning", "WARNING");
             German.Add("warning", "WARNUNG");
@@ -564,6 +568,7 @@ namespace RelhaxModpack
             French.Add("warning", "ATTENTION");
             Spanish.Add("warning", "ATENCIÓN");
             Russian.Add("warning", "ВНИМАНИЕ");
+            CaveMan.Add("warning", "Big Predator!");
 
             English.Add("critical", "CRITICAL");
             German.Add("critical", "KRITISCH");
@@ -571,6 +576,7 @@ namespace RelhaxModpack
             French.Add("critical", "CRITIQUAL");
             Spanish.Add("critical", "CRÍTICO");
             Russian.Add("critical", "КРИТИЧЕСКАЯ ОШИБКА");
+            CaveMan.Add("critical", "Don't get eaten");
 
             English.Add("information", "Information");
             German.Add("information", "Information");
@@ -578,6 +584,7 @@ namespace RelhaxModpack
             French.Add("information", "information");
             Spanish.Add("information", "Información");
             Russian.Add("information", "Информация");
+            CaveMan.Add("information", "Listen")
 
             English.Add("select", "Select");
             German.Add("select", "Auswählen");
