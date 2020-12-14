@@ -20,6 +20,8 @@ using RelhaxModpack.Xml;
 using RelhaxModpack.Utilities;
 using Trigger = RelhaxModpack.Database.Trigger;
 using RelhaxModpack.Utilities.Enums;
+using RelhaxModpack.Utilities.ClassEventArgs;
+using System.Windows.Controls.Primitives;
 
 namespace RelhaxModpack.Windows
 {
@@ -55,6 +57,7 @@ namespace RelhaxModpack.Windows
             "-----Dependencies-----",
         };
         private readonly string HttpRegexSearch = @"https*:\/{2}\S+";
+        private readonly string UpdatedPackageNewCRC = "f";
 
         //public
         /// <summary>
@@ -221,7 +224,7 @@ namespace RelhaxModpack.Windows
 
         private DatabasePackage GetDatabasePackage(object obj)
         {
-            if (obj is SelectablePackage selectablePackage)
+            if (obj is DatabasePackage selectablePackage)
                 return selectablePackage;
 
             else if (obj is EditorComboBoxItem editorComboBoxItem)
@@ -388,7 +391,6 @@ namespace RelhaxModpack.Windows
             DefaultSaveLocationSetting.Text = EditorSettings.DefaultEditorSaveLocation;
             FtpUpDownAutoCloseTimoutSlider.Value = EditorSettings.FTPUploadDownloadWindowTimeout;
             FtpUpDownAutoCloseTimoutDisplayLabel.Text = EditorSettings.FTPUploadDownloadWindowTimeout.ToString();
-            SelectAutoUpdateWorkDirectoryTextbox.Text = EditorSettings.AutoUpdaterWorkDirectory;
         }
         #endregion
 
@@ -465,37 +467,6 @@ namespace RelhaxModpack.Windows
 
         }
 
-        private void LaunchAutoUpdateButton_Click(object sender, RoutedEventArgs e)
-        {
-            AutoUpdatePackageWindow autoUpdatePackageWindow = new AutoUpdatePackageWindow()
-            {
-                Packages = DatabaseUtils.GetFlatList(GlobalDependencies, Dependencies, ParsedCategoryList),
-                WorkingDirectory = EditorSettings.AutoUpdaterWorkDirectory,
-                Credential = new NetworkCredential(EditorSettings.BigmodsUsername, EditorSettings.BigmodsPassword)
-            };
-            autoUpdatePackageWindow.ShowDialog();
-        }
-
-        private void SelectAutoUpdateWorkDirectoryButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommonOpenFileDialog openFolderDialog = new CommonOpenFileDialog()
-            {
-                IsFolderPicker = true,
-                Multiselect = false,
-                Title = "Select folder"
-            };
-            if (openFolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                SelectAutoUpdateWorkDirectoryTextbox.Text = openFolderDialog.FileName;
-            }
-        }
-
-        private void SelectAutoUpdateWorkDirectoryTextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EditorSettings.AutoUpdaterWorkDirectory = SelectAutoUpdateWorkDirectoryTextbox.Text;
-            LaunchAutoUpdateButton.IsEnabled = !string.IsNullOrWhiteSpace(EditorSettings.AutoUpdaterWorkDirectory);
-        }
-
         private void PackageDevURLDisplay_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             //since it is multiple lines, split into array
@@ -570,6 +541,15 @@ namespace RelhaxModpack.Windows
                     else if(element.Name.Equals(nameof(PackageLevelDisplay)) || element.Name.Equals(nameof(PackageCalculatedLevelDisplay)))
                     {
                         (element as TextBlock).Text = string.Empty;
+                    }
+
+                    //also clear the undo stack if enabled
+                    if(element is TextBoxBase tbb && tbb.IsUndoEnabled)
+                    {
+                        //https://docs.microsoft.com/en-us/dotnet/api/system.windows.controls.primitives.textboxbase.isundoenabled?view=netframework-4.8#System_Windows_Controls_Primitives_TextBoxBase_IsUndoEnabled
+                        //"Setting this property to false clears the undo stack"
+                        tbb.IsUndoEnabled = false;
+                        tbb.IsUndoEnabled = true;
                     }
                 }
             }
@@ -753,6 +733,7 @@ namespace RelhaxModpack.Windows
                 Logging.Editor("[MouseDoubleClick]: Never found an 'http' sequence to begin parsing", LogLevel.Info);
             }
         }
+
         #endregion
 
         #region Show database methods
@@ -1795,8 +1776,8 @@ namespace RelhaxModpack.Windows
 
             if(packToWorkOn == null)
             {
-                Logging.Editor("packToWorkOn is null (not EditorComboboxItem or Databasepackage",LogLevel.Error);
-                MessageBox.Show("packToWorkOn is null (not EditorComboboxItem or Databasepackage), abort");
+                Logging.Editor("PackToWorkOn is null (not EditorComboboxItem or Databasepackage",LogLevel.Error);
+                MessageBox.Show("PackToWorkOn is null (not EditorComboboxItem or Databasepackage), abort");
                 return;
             }
 
@@ -1804,7 +1785,7 @@ namespace RelhaxModpack.Windows
             //first check if it's an editor combobox item (selected from checkbox) or the direct item
             if (string.IsNullOrWhiteSpace(packToWorkOn.ZipFile))
             {
-                MessageBox.Show("no zip file to download");
+                MessageBox.Show("No zip file to download");
                 return;
             }
 
@@ -1814,6 +1795,8 @@ namespace RelhaxModpack.Windows
                 MessageBox.Show("Missing FTP credentials");
                 return;
             }
+
+            //create the save zip file dialog if not already null
             if (SaveZipFileDialog == null)
             {
                 SaveZipFileDialog = new SaveFileDialog()
@@ -1825,7 +1808,6 @@ namespace RelhaxModpack.Windows
                     //don't set initial directory to allow for restore feature
                     //https://stackoverflow.com/questions/16078362/how-to-save-last-folder-in-openfiledialog
                     //https://stackoverflow.com/questions/4353487/what-does-the-filedialog-restoredirectory-property-actually-do
-                    //InitialDirectory = Settings.ApplicationStartupPath,
                     Title = "Select destination for zip file",
                     FileName = packToWorkOn.ZipFile
                 };
@@ -1834,18 +1816,22 @@ namespace RelhaxModpack.Windows
             {
                 SaveZipFileDialog.FileName = packToWorkOn.ZipFile;
             }
+
+            //invoke and stop if user stops
             if (!(bool)SaveZipFileDialog.ShowDialog())
                 return;
+
             //make and run the uploader instance
-            DatabaseEditorDownload name = new DatabaseEditorDownload()
+            DatabaseEditorTrnasferWindow name = new DatabaseEditorTrnasferWindow()
             {
                 ZipFilePathDisk = SaveZipFileDialog.FileName,
                 ZipFilePathOnline = string.Format("{0}{1}/", PrivateStuff.BigmodsFTPUsersRoot, Settings.WoTModpackOnlineFolderVersion),
                 ZipFileName = Path.GetFileName(packToWorkOn.ZipFile),
                 Credential = new NetworkCredential(EditorSettings.BigmodsUsername, EditorSettings.BigmodsPassword),
-                Upload = false,
+                TransferMode = EditorTransferMode.DownloadZip,
                 PackageToUpdate = null,
-                Countdown = EditorSettings.FTPUploadDownloadWindowTimeout
+                Countdown = EditorSettings.FTPUploadDownloadWindowTimeout,
+                EditorSettings = EditorSettings
             };
             name.Show();
         }
@@ -1859,23 +1845,19 @@ namespace RelhaxModpack.Windows
                 return;
             }
 
-            //make sure FTP credentials are at least entered
+            //make sure FTP credentials are entered
             if (string.IsNullOrWhiteSpace(EditorSettings.BigmodsPassword) || string.IsNullOrWhiteSpace(EditorSettings.BigmodsUsername))
             {
                 MessageBox.Show("Missing FTP credentials");
                 return;
             }
 
-            DatabasePackage packToWorkOn = null;
-            if (SelectedItem is EditorComboBoxItem ecbi)
-                packToWorkOn = ecbi.Package;
-            else if (SelectedItem is DatabasePackage pack)
-                packToWorkOn = pack;
-
+            //get the currently selected item in the editor UI
+            DatabasePackage packToWorkOn = GetDatabasePackage(SelectedItem);
             if (packToWorkOn == null)
             {
-                Logging.Editor("packToWorkOn is null (not EditorComboboxItem or Databasepackage", LogLevel.Error);
-                MessageBox.Show("packToWorkOn is null (not EditorComboboxItem or Databasepackage), abort");
+                Logging.Editor("PackToWorkOn is null (not EditorComboboxItem or Databasepackage", LogLevel.Error);
+                MessageBox.Show("PackToWorkOn is null (not EditorComboboxItem or Databasepackage), abort");
                 return;
             }
 
@@ -1887,77 +1869,72 @@ namespace RelhaxModpack.Windows
                     CheckFileExists = true,
                     CheckPathExists = true,
                     DefaultExt = "zip",
-                    //don't set InitialDirectory to allow it to remember last folder
-                    //InitialDirectory = Settings.ApplicationStartupPath,
                     Multiselect = false,
                     Title = "Select zip file to upload"
                 };
 
             if ((bool)OpenZipFileDialog.ShowDialog() && File.Exists(OpenZipFileDialog.FileName))
-            {
                 zipFileToUpload = OpenZipFileDialog.FileName;
-            }
             else
                 return;
 
             //make and run the uploader instance
-            DatabaseEditorDownload name = new DatabaseEditorDownload()
+            DatabaseEditorTrnasferWindow name = new DatabaseEditorTrnasferWindow()
             {
                 ZipFilePathDisk = zipFileToUpload,
                 ZipFilePathOnline = string.Format("{0}{1}/", PrivateStuff.BigmodsFTPUsersRoot, Settings.WoTModpackOnlineFolderVersion),
                 ZipFileName = Path.GetFileName(zipFileToUpload),
                 Credential = new NetworkCredential(EditorSettings.BigmodsUsername, EditorSettings.BigmodsPassword),
-                Upload = true,
+                TransferMode = EditorTransferMode.UploadZip,
                 PackageToUpdate = packToWorkOn,
-                Countdown = EditorSettings.FTPUploadDownloadWindowTimeout
+                Countdown = EditorSettings.FTPUploadDownloadWindowTimeout,
+                EditorSettings = EditorSettings
             };
             name.OnEditorUploadDownloadClosed += OnEditorUploadFinished;
             name.Show();
         }
 
-        private void OnEditorUploadFinished(object sender, EditorUploadDownloadEventArgs e)
+        private void OnEditorUploadFinished(object sender, EditorTransferEventArgs e)
         {
-            Logging.Editor("Upload finished, applying change");
+            Logging.Editor("OnEditorUploadFinished(): Upload finished, type = {0}", LogLevel.Info, e.TransferMode.ToString());
 
-            if (e.Package == null)
+            DatabasePackage selectedItem = GetDatabasePackage(SelectedItem);
+
+            switch (e.TransferMode)
             {
-                //uploaded media
-                Logging.Editor("Upload of {0} success, adding entry in UI", LogLevel.Info, e.UploadedFilename);
-                Media m = new Media()
-                {
-                    MediaType = MediaType.Picture,
-                    URL = string.Format("{0}{1}", e.UploadedFilepathOnline, e.UploadedFilename).Replace("ftp:", "http:")
-                };
-                PackageMediasDisplay.Items.Add(m);
-            }
-            //else uploaded package zipfile entry
-            else
-            {
-                Logging.Editor("Upload was package zipfile, checking if currently displayed");
+                case EditorTransferMode.UploadMedia:
+                    Logging.Editor("Adding media entry {0} to package {1}", LogLevel.Info, e.UploadedFilename, e.Package.PackageName);
+                    Media m = new Media()
+                    {
+                        MediaType = MediaType.Picture,
+                        URL = string.Format("{0}{1}", e.UploadedFilepathOnline, e.UploadedFilename).Replace("ftp:", "http:")
+                    };
+                    SelectablePackage updatedPackage = e.Package as SelectablePackage;
+                    updatedPackage.Medias.Add(m);
 
-                DatabasePackage selectedItem = null;
-                if (SelectedItem is DatabasePackage dp)
-                    selectedItem = dp;
-                else if (SelectedItem is EditorComboBoxItem editorComboBoxItem)
-                    selectedItem = editorComboBoxItem.Package;
+                    if (selectedItem.Equals(e.Package))
+                    {
+                        Logging.Editor("It's currently displayed, updating entry for display");
+                        PackageMediasDisplay.Items.Add(m);
+                        ApplyDatabaseObject(e.Package);
+                        ShowDatabasePackage(e.Package);
+                    }
+                    break;
+                case EditorTransferMode.UploadZip:
+                    Logging.Editor("Changing zipFile entry for package {0} and updating time stamp/CRC", LogLevel.Info, e.Package.PackageName);
+                    Logging.Editor("Old = {0}, New = {1}", LogLevel.Info, PackageZipFileDisplay.Text, e.UploadedFilename);
+                    e.Package.ZipFile = e.UploadedFilename;
+                    e.Package.CRC = UpdatedPackageNewCRC;
+                    e.Package.Timestamp = CommonUtils.GetCurrentUniversalFiletimeTimestamp();
 
-                string tempZipName = e.Package.ZipFile;
-
-                //update the package crc and timestamp values
-                e.Package.CRC = "f";
-                e.Package.Timestamp = CommonUtils.GetCurrentUniversalFiletimeTimestamp();
-
-                if (selectedItem.Equals(e.Package))
-                {
-                    Logging.Editor("It's currently displayed, updating entry for display");
-                    ApplyDatabaseObject(e.Package);
-                    e.Package.ZipFile = tempZipName;
-                    ShowDatabasePackage(e.Package);
-                }
-                else
-                {
-                    Logging.Editor("It's currently not displayed, updating entry for not display");
-                }
+                    if (selectedItem.Equals(e.Package))
+                    {
+                        Logging.Editor("It's currently displayed, updating entry for display");
+                        PackageZipFileDisplay.Text = e.Package.ZipFile;
+                        ApplyDatabaseObject(e.Package);
+                        ShowDatabasePackage(e.Package);
+                    }
+                    break;
             }
 
             UnsavedChanges = true;
@@ -2524,6 +2501,15 @@ namespace RelhaxModpack.Windows
                 return;
             }
 
+            //get the currently selected item in the editor UI
+            DatabasePackage packToWorkOn = GetDatabasePackage(SelectedItem);
+            if (packToWorkOn == null)
+            {
+                Logging.Editor("PackToWorkOn is null (not EditorComboboxItem or Databasepackage", LogLevel.Error);
+                MessageBox.Show("PackToWorkOn is null (not EditorComboboxItem or Databasepackage), abort");
+                return;
+            }
+
             //get the path to upload to
             if (OpenPictureDialog == null)
                 OpenPictureDialog = new OpenFileDialog()
@@ -2531,7 +2517,6 @@ namespace RelhaxModpack.Windows
                     AddExtension = true,
                     CheckFileExists = true,
                     CheckPathExists = true,
-                    //InitialDirectory = Settings.ApplicationStartupPath,
                     Multiselect = true,
                     Title = "Select image file to upload"
                 };
@@ -2551,17 +2536,18 @@ namespace RelhaxModpack.Windows
             foreach (string mediaToUploadPath in OpenPictureDialog.FileNames)
             {
                 string mediaToUploadFilename = Path.GetFileName(mediaToUploadPath);
-                DatabaseEditorDownload name = new DatabaseEditorDownload()
+                DatabaseEditorTrnasferWindow name = new DatabaseEditorTrnasferWindow()
                 {
                     ZipFilePathDisk = mediaToUploadPath,
                     ZipFilePathOnline = selectUploadLocation.UploadPath,
                     ZipFileName = mediaToUploadFilename,
                     Credential = new NetworkCredential(EditorSettings.BigmodsUsername, EditorSettings.BigmodsPassword),
-                    Upload = true,
-                    PackageToUpdate = null,
-                    Countdown = EditorSettings.FTPUploadDownloadWindowTimeout
+                    TransferMode = EditorTransferMode.UploadMedia,
+                    PackageToUpdate = packToWorkOn,
+                    Countdown = EditorSettings.FTPUploadDownloadWindowTimeout,
+                    EditorSettings = EditorSettings
                 };
-                //this needs to be changed to a show() with event handler made for on exit
+                //changed to a show() with event handler made for on exit
                 name.OnEditorUploadDownloadClosed += OnEditorUploadFinished;
                 name.Show();
             }
@@ -2764,19 +2750,14 @@ namespace RelhaxModpack.Windows
             EditorSettings.DefaultEditorSaveLocation = DefaultSaveLocationSetting.Text;
         }
 
+        private void SelectTransferWindowMovePathTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EditorSettings.UploadZipMoveFolder = SelectTransferWindowMovePathTextbox.Text;
+        }
+
         private void SaveSelectionBeforeLeaveSetting_Click(object sender, RoutedEventArgs e)
         {
             EditorSettings.SaveSelectionBeforeLeave = (bool)SaveSelectionBeforeLeaveSetting.IsChecked;
-        }
-
-        private void ApplyBehaviorSetting_Checked(object sender, RoutedEventArgs e)
-        {
-            if ((bool)ApplyBehaviorDefaultSetting.IsChecked)
-                EditorSettings.ApplyBehavior = ApplyBehavior.Default;
-            else if ((bool)ApplyBehaviorApplyTriggersSaveSetting.IsChecked)
-                EditorSettings.ApplyBehavior = ApplyBehavior.ApplyTriggersSave;
-            else if ((bool)ApplyBehaviorSaveTriggersApplySetting.IsChecked)
-                EditorSettings.ApplyBehavior = ApplyBehavior.SaveTriggersApply;
         }
 
         private void ShowConfirmOnPackageApplySetting_Click(object sender, RoutedEventArgs e)
@@ -2787,6 +2768,35 @@ namespace RelhaxModpack.Windows
         private void ShowConfirmOnPackageAddRemoveEditSetting_Click(object sender, RoutedEventArgs e)
         {
             EditorSettings.ShowConfirmationOnPackageAddRemoveMove = (bool)ShowConfirmOnPackageAddRemoveEditSetting.IsChecked;
+        }
+
+        private void DatabaseTransferDeleteActuallyMove_Click(object sender, RoutedEventArgs e)
+        {
+            EditorSettings.UploadZipDeleteIsActuallyMove = (bool)DatabaseTransferDeleteActuallyMove.IsChecked;
+        }
+
+        private void SelectTransferWindowMovePathButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog openFolderDialog = new CommonOpenFileDialog()
+            {
+                IsFolderPicker = true,
+                Multiselect = false,
+                Title = "Select folder"
+            };
+            if (openFolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                SelectTransferWindowMovePathTextbox.Text = openFolderDialog.FileName;
+            }
+        }
+
+        private void ApplyBehaviorSetting_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)ApplyBehaviorDefaultSetting.IsChecked)
+                EditorSettings.ApplyBehavior = ApplyBehavior.Default;
+            else if ((bool)ApplyBehaviorApplyTriggersSaveSetting.IsChecked)
+                EditorSettings.ApplyBehavior = ApplyBehavior.ApplyTriggersSave;
+            else if ((bool)ApplyBehaviorSaveTriggersApplySetting.IsChecked)
+                EditorSettings.ApplyBehavior = ApplyBehavior.SaveTriggersApply;
         }
 
         private void FtpUpDownAutoCloseTimoutSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

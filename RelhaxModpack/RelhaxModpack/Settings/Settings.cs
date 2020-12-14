@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Xml;
 using System.ComponentModel;
+using RelhaxModpack.Utilities.Enums;
 
 namespace RelhaxModpack
 {
@@ -51,6 +52,11 @@ namespace RelhaxModpack
         /// The name of the modpack patch designer tool settings file
         /// </summary>
         public const string PatcherSettingsFilename = "PatchSettings.xml";
+
+        /// <summary>
+        /// The name of the modpack automation runner tool settings file
+        /// </summary>
+        public const string AutomationRunnerSettingsFilename = "AutomationRunnerSettings.xml";
 
         /// <summary>
         /// The name of the selection file when used in the setting "save last installed selection"

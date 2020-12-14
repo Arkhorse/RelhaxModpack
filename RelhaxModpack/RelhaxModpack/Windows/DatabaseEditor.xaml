@@ -373,6 +373,8 @@
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="35"/>
                             <RowDefinition Height="20"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150"/>
@@ -410,13 +412,15 @@
                             <Slider x:Name="FtpUpDownAutoCloseTimoutSlider" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="True" ValueChanged="FtpUpDownAutoCloseTimoutSlider_ValueChanged" IsSnapToTickEnabled="True"/>
                             <TextBlock x:Name="FtpUpDownAutoCloseTimoutDisplayLabel" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="Test" Grid.Column="1"/>
                         </Grid>
-                        <Button x:Name="SelectAutoUpdateWorkDirectoryButton" HorizontalAlignment="Stretch" Grid.Row="10" VerticalAlignment="Center" Click="SelectAutoUpdateWorkDirectoryButton_Click"
-                                ToolTip="Select the folder to use for the auto update feature (work in progress)">
-                            <TextBlock x:Name="SelectAutoUpdateWorkDirectoryTextblock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"
-                                       Text="Select auto update work directory"/>
+                        <CheckBox x:Name="DatabaseTransferDeleteActuallyMove" Grid.Column="1" HorizontalAlignment="Left"  Grid.Row="11" VerticalAlignment="Center" Content="Editor transfer window's delete button is actually move"
+                                  Click="DatabaseTransferDeleteActuallyMove_Click" ToolTip="When checked, the delete file button in the editor file transfer window will actually move the file into the folder specified below"/>
+                        <Button x:Name="SelectTransferWindowMovePathButton" HorizontalAlignment="Stretch" Grid.Row="12" VerticalAlignment="Center" Click="SelectTransferWindowMovePathButton_Click"
+                                ToolTip="Select the folder to use for the editor transfer window, when upload mode and the above option 'delete is actually move' is checked">
+                            <TextBlock x:Name="SelectTransferWindowMovePathTextblock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"
+                                       Text="Select transfer window's upload move directory"/>
                         </Button>
-                        <TextBox x:Name="SelectAutoUpdateWorkDirectoryTextbox" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="10" TextWrapping="Wrap" VerticalAlignment="Center"
-                                 TextChanged="SelectAutoUpdateWorkDirectoryTextbox_TextChanged" />
+                        <TextBox x:Name="SelectTransferWindowMovePathTextbox" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="12" TextWrapping="Wrap" VerticalAlignment="Center"
+                                 TextChanged="SelectTransferWindowMovePathTextbox_TextChanged" />
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DescriptionHelperTab" Header="How to use" ToolTip="Read some documentation on this tool">
@@ -574,7 +578,7 @@
                 </TabItem>
                 <TabItem x:Name="DescriptionTab" Header="Description">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageDescriptionDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
+                        <TextBox x:Name="PackageDescriptionDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DevURLTab" Header="Dev URL">
@@ -586,12 +590,12 @@
                 </TabItem>
                 <TabItem x:Name="InternalNotesTab" Header="Internal Notes">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageInternalNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
+                        <TextBox x:Name="PackageInternalNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="UpdateNotesTab" Header="Update Notes">
                     <Grid Background="#FFE5E5E5">
-                        <TextBox x:Name="PackageUpdateNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
+                        <TextBox x:Name="PackageUpdateNotesDisplay" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" MouseDoubleClick="PackageDisplayUrlParse_MouseDoubleClick"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="DependenciesTab" Header="Dependencies">
@@ -709,7 +713,5 @@
             </ComboBox>
         </Grid>
         <TextBlock x:Name="DragDropTest" HorizontalAlignment="Stretch" Margin="250,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50"/>
-        <Button x:Name="LaunchAutoUpdateButton" Content="Launch Auto-update window" HorizontalAlignment="Left" Margin="10,0,0,30" Grid.Row="1" VerticalAlignment="Bottom"
-                Width="235" Click="LaunchAutoUpdateButton_Click" IsEnabled="False"/>
     </Grid>
 </local:RelhaxWindow>

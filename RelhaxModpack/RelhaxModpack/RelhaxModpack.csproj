@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\RelhaxModpack.xml</DocumentationFile>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>Properties\RelhaxModpack.ruleset</CodeAnalysisRuleSet>
     <NoWarn>CS1658, CS4014, CA1009, CA1065, CA0507, 1009, IDE0060, IDE0044</NoWarn>
   </PropertyGroup>
@@ -129,24 +129,27 @@
     <Compile Include="Atlases\Packing\OutOfSpaceException.cs" />
     <Compile Include="Atlases\Packing\RectanglePacker.cs" />
     <Compile Include="Atlases\IRelhaxUnmanagedLibrary.cs" />
+    <Compile Include="Automation\AutomationMacro.cs" />
+    <Compile Include="Automation\AutomationSequence.cs" />
+    <Compile Include="Automation\AutomationSequencer.cs" />
+    <Compile Include="Automation\AutomationTask.cs" />
     <Compile Include="Database\Category.cs" />
     <Compile Include="Database\DatabaseUtils.cs" />
     <Compile Include="Database\IDatabaseComponent.cs" />
     <Compile Include="Database\DatabaseLogic.cs" />
     <Compile Include="Database\DatabasePackage.cs" />
     <Compile Include="Database\Dependency.cs" />
-    <Compile Include="Database\DownloadInstructions.cs" />
     <Compile Include="Database\IComponentWithDependencies.cs" />
     <Compile Include="Database\IXmlSerializable.cs" />
     <Compile Include="Database\Media.cs" />
     <Compile Include="Database\PackageComparer.cs" />
     <Compile Include="Database\PackageTagsList.cs" />
     <Compile Include="Database\PackageTagsListConverter.cs" />
-    <Compile Include="Database\PatchUpdate.cs" />
     <Compile Include="Database\SelectablePackage.cs" />
     <Compile Include="Database\Trigger.cs" />
-    <Compile Include="Database\UpdateInstructions.cs" />
     <Compile Include="Database\UserFile.cs" />
+    <Compile Include="Settings\AutomationRunnerSettings.cs" />
+    <Compile Include="Settings\ISettingsFile.cs" />
     <Compile Include="UI\BoundUISettings.cs" />
     <Compile Include="UI\ClassColorset.cs" />
     <Compile Include="UI\ClassThemeDefinitions\BorderClassThemeDefinition.cs" />
@@ -175,8 +178,11 @@
     <Compile Include="UI\UiUtils.cs" />
     <Compile Include="UI\WindowColorset.cs" />
     <Compile Include="UI\ZoomBorder.cs" />
+    <Compile Include="Utilities\ClassEventArgs\LogMessageEventArgs.cs" />
     <Compile Include="Utilities\Enums\ApplicationMode.cs" />
+    <Compile Include="Utilities\Enums\ApplicationVersions.cs" />
     <Compile Include="Utilities\Enums\ApplyBehavior.cs" />
+    <Compile Include="Utilities\Enums\EditorTransferMode.cs" />
     <Compile Include="Utilities\Enums\DatabaseVersions.cs" />
     <Compile Include="Utilities\Enums\DatabaseXmlVersion.cs" />
     <Compile Include="Utilities\Enums\DownloadTypes.cs" />
@@ -187,17 +193,21 @@
     <Compile Include="Utilities\Enums\LogFiles.cs" />
     <Compile Include="Utilities\Enums\LogLevel.cs" />
     <Compile Include="Utilities\Enums\LogOptions.cs" />
+    <Compile Include="Utilities\Enums\MacroType.cs" />
     <Compile Include="Utilities\Enums\MediaType.cs" />
     <Compile Include="Utilities\Enums\PackageTags.cs" />
     <Compile Include="Utilities\Enums\PatchExitCode.cs" />
     <Compile Include="Utilities\Enums\PatchRegressionTypes.cs" />
     <Compile Include="Utilities\Enums\ReplacementTypes.cs" />
+    <Compile Include="Utilities\Enums\ReturnCodes.cs" />
     <Compile Include="Utilities\Enums\SelectionTypes.cs" />
     <Compile Include="Utilities\Enums\SelectionView.cs" />
+    <Compile Include="Utilities\Enums\AutomationRunMode.cs" />
     <Compile Include="Utilities\Enums\UIThemes.cs" />
     <Compile Include="Utilities\Enums\UninstallModes.cs" />
     <Compile Include="Utilities\Enums\UpdateTypes.cs" />
     <Compile Include="Utilities\Enums\XmlLoadType.cs" />
+    <Compile Include="Utilities\ClassEventArgs\EditorTransferEventArgs.cs" />
     <Compile Include="Utilities\FileUtils.cs" />
     <Compile Include="Utilities\FtpUtils.cs" />
     <Compile Include="Common\GlobalSuppressions.cs" />
@@ -206,6 +216,10 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Shortcuts\Shortcut.cs" />
     <Compile Include="Atlases\Texture.cs" />
+    <Compile Include="Windows\DatabaseAutomationRunner.xaml.cs">
+      <DependentUpon>DatabaseAutomationRunner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ICustomFeatureWindow.cs" />
     <Compile Include="Xml\XmlUnpack.cs" />
     <Compile Include="Logging\Logfile.cs" />
     <Compile Include="Logging\Logging.cs" />
@@ -239,9 +253,6 @@
     <Compile Include="Shortcuts\ShortcutUtils.cs" />
     <Compile Include="Windows\AskCloseWoT.xaml.cs">
       <DependentUpon>AskCloseWoT.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\AutoUpdatePackageWindow.xaml.cs">
-      <DependentUpon>AutoUpdatePackageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\CreateFTPFolderName.xaml.cs">
       <DependentUpon>CreateFTPFolderName.xaml</DependentUpon>
@@ -309,8 +320,8 @@
     <Compile Include="Windows\DatabaseEditor.xaml.cs">
       <DependentUpon>DatabaseEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\DatabaseEditorDownload.xaml.cs">
-      <DependentUpon>DatabaseEditorDownload.xaml</DependentUpon>
+    <Compile Include="Windows\DatabaseEditorTransferWindow.xaml.cs">
+      <DependentUpon>DatabaseEditorTransferWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ModpackToolbox.xaml.cs">
       <DependentUpon>ModpackToolbox.xaml</DependentUpon>
@@ -330,7 +341,7 @@
     <Compile Include="Windows\ProgressIndicator.xaml.cs">
       <DependentUpon>ProgressIndicator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\RelhaxWindow.cs" />
+    <Compile Include="Windows\RelhaxWindow.cs" />
     <Compile Include="Windows\SelectionFileIssuesDisplay.xaml.cs">
       <DependentUpon>SelectionFileIssuesDisplay.xaml</DependentUpon>
     </Compile>
@@ -347,9 +358,6 @@
     <Compile Include="Xml\PrimitiveFileReader.cs" />
     <Compile Include="Xml\XmlBinaryHandler.cs" />
     <Compile Include="Xml\XmlUtils.cs" />
-    <Compile Include="Windows\AutoUpdateFilesInspector.xaml.cs">
-      <DependentUpon>AutoUpdateFilesInspector.xaml</DependentUpon>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -418,10 +426,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\AutoUpdatePackageWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Windows\CreateFTPFolderName.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -430,11 +434,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\DatabaseAutomationRunner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\DatabaseEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\DatabaseEditorDownload.xaml">
+    <Page Include="Windows\DatabaseEditorTransferWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -531,10 +539,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\AdvancedProgress.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\AutoUpdateFilesInspector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

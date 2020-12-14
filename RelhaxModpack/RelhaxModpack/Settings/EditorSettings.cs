@@ -54,9 +54,14 @@ namespace RelhaxModpack
         public uint FTPUploadDownloadWindowTimeout = 0;
 
         /// <summary>
-        /// The directory where the auto updater will download, modify, and upload files to/from
+        /// Flag to determine if the delete zip button (actually open file by default) will actually delete the zip, or move it to the specified folder
         /// </summary>
-        public string AutoUpdaterWorkDirectory = string.Empty;
+        public bool UploadZipDeleteIsActuallyMove = false;
+
+        /// <summary>
+        /// The folder path to move the uploaded file to. If the file already exists, it will be overridden
+        /// </summary>
+        public string UploadZipMoveFolder = string.Empty;
 
         /// <summary>
         /// Create an instance of the EditorSettings class. Settings should be set via property initialization style.

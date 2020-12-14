@@ -94,7 +94,7 @@ namespace RelhaxModpack.Windows
     /// <summary>
     /// Interaction logic for ModSelectionList.xaml
     /// </summary>
-    public partial class ModSelectionList : RelhaxWindow
+    public partial class ModSelectionList : RelhaxWindow, IDisposable
     {
         /// <summary>
         /// The list of categories
@@ -144,6 +144,8 @@ namespace RelhaxModpack.Windows
         private DispatcherTimer FlashTimer = null;
         private XDocument Md5HashDocument = null;
         private DatabaseVersions databaseVersion;
+        private string InstallingAsDatabaseVersionDisplay = string.Empty;
+        private bool disposedValue;
 
         #region Boring stuff
         /// <summary>
@@ -449,11 +451,22 @@ namespace RelhaxModpack.Windows
                 return false;
             }
 
-            //if not stable db, update WoT current version and online folder version macros from modInfoxml itself
+            //if not stable db, update WoT online folder version macro from modInfoxml itself
             if (databaseVersion != DatabaseVersions.Stable)
             {
                 Settings.WoTModpackOnlineFolderVersion = XmlUtils.GetXmlStringFromXPath(modInfoDocument, "//modInfoAlpha.xml/@onlineFolder");
-                Settings.WoTClientVersion = XmlUtils.GetXmlStringFromXPath(modInfoDocument, "//modInfoAlpha.xml/@version");
+            }
+
+            //set the version of the wot client to display for the UI, stored in a string to be called later
+            switch(databaseVersion)
+            {
+                case DatabaseVersions.Test:
+                case DatabaseVersions.Beta:
+                    InstallingAsDatabaseVersionDisplay = XmlUtils.GetXmlStringFromXPath(modInfoDocument, "//modInfoAlpha.xml/@version");
+                    break;
+                case DatabaseVersions.Stable:
+                    InstallingAsDatabaseVersionDisplay = Settings.WoTClientVersion;
+                    break;
             }
 
             //parse the modInfoXml to list in memory
@@ -2232,15 +2245,16 @@ namespace RelhaxModpack.Windows
             //compare each package and check if it's out of date
             foreach (DatabasePackage globalDependencyFromSelection in globalPackagesFromSelection)
             {
-                DatabasePackage globalDependency = GlobalDependencies.Find(pack => pack.UID.Equals(globalDependencyFromSelection.UID));
-                if (globalDependencyFromSelection == null)
+                DatabasePackage globalDependencyFromDatabase = GlobalDependencies.Find(pack => pack.UID.Equals(globalDependencyFromSelection.UID));
+                if (globalDependencyFromDatabase == null)
                 {
-                    Logging.Info(LogOptions.MethodName, "Global package {0} was not found in list database GlobalDependencies. Setting globasOutOfDate to true", globalDependencyFromSelection.PackageName);
+                    Logging.Info(LogOptions.MethodName, "Global package {0} from selection list was not found in the database list GlobalDependencies. Setting globasOutOfDate to true", globalDependencyFromSelection.PackageName);
                     globalsOutOfDate = true;
+                    continue;
                 }
-                if (IsSelectionV3PackageOutOfDate(globalDependencyFromSelection, globalDependency))
+                if (IsSelectionV3PackageOutOfDate(globalDependencyFromSelection, globalDependencyFromDatabase))
                 {
-                    Logging.Info(LogOptions.MethodName, "Global package {0} is out of date from list of GlobalDependencies. Setting globasOutOfDate to true", globalDependencyFromSelection.PackageName);
+                    Logging.Info(LogOptions.MethodName, "Global package {0} from selection list is out of date in comparison to the database list GlobalDependencies. Setting globasOutOfDate to true", globalDependencyFromSelection.PackageName);
                     globalsOutOfDate = true;
                     outOfDatePackages.Add(globalDependencyFromSelection);
                 }
@@ -3087,5 +3101,100 @@ namespace RelhaxModpack.Windows
             }
         }
         #endregion
+        /*
+        ~ModSelectionList()
+        {
+
+        }
+        */
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    if (loadingProgress != null)
+                        loadingProgress = null;
+
+                    if (p != null)
+                        p = null;
+
+                    if (OriginalBrush != null)
+                        OriginalBrush = null;
+
+                    if (HighlightBrush != null)
+                        HighlightBrush = null;
+
+                    if (FlashTimer != null)
+                    {
+                        FlashTimer.IsEnabled = false;
+                        FlashTimer.Stop();
+                        if (FlashTimer.Tag != null)
+                            FlashTimer.Tag = null;
+                        FlashTimer.Tick -= OnFlashTimerTick;
+                        FlashTimer = null;
+                    }
+
+                    if (Md5HashDocument != null)
+                        Md5HashDocument = null;
+
+                    //public resources
+                    if (OnSelectionListReturn != null)
+                        OnSelectionListReturn = null;
+
+                    if (!continueInstallation)
+                    {
+                        if (UserCategory != null)
+                        {
+                            UserCategory.Dispose();
+                            UserCategory = null;
+                        }
+
+                        if (GlobalDependencies != null)
+                        {
+                            foreach (DatabasePackage package in GlobalDependencies)
+                                package.Dispose();
+                            GlobalDependencies.Clear();
+                            GlobalDependencies = null;
+                        }
+
+                        if (Dependencies != null)
+                        {
+                            foreach (Dependency dependency in Dependencies)
+                                dependency.Dispose();
+                            Dependencies.Clear();
+                            Dependencies = null;
+                        }
+
+                        if (ParsedCategoryList != null)
+                        {
+                            foreach (Category category in ParsedCategoryList)
+                                category.Dispose();
+                            ParsedCategoryList.Clear();
+                            ParsedCategoryList = null;
+                        }
+                    }
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~ModSelectionList()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

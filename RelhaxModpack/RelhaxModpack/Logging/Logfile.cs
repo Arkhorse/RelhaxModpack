@@ -3,14 +3,16 @@ using System.Text;
 using System.IO;
 using System.Windows;
 using RelhaxModpack.Utilities.Enums;
+using RelhaxModpack.Utilities.ClassEventArgs;
 
 namespace RelhaxModpack
 {
     /// <summary>
     /// Delegate for allowing method callback when the logfile writes to disk
     /// </summary>
-    /// <param name="message">The formatted message that was written to the logfile</param>
-    public delegate void LoggingMessageWrite(string message);
+    /// <param name="sender">The logfile instance object</param>
+    /// <param name="e">The message and log level event argument</param>
+    public delegate void LoggingMessageWrite(object sender, LogMessageEventArgs e);
 
     /// <summary>
     /// Represents an instance of a log file used for writing important logging information to a log
@@ -31,6 +33,11 @@ namespace RelhaxModpack
         /// The date and time format for writing each line in the log file
         /// </summary>
         public string Timestamp { get; private set; }
+
+        /// <summary>
+        /// Flag for if the log file is receiving redirections from other log file
+        /// </summary>
+        public bool IsRedirecting { get; set; } = false;
 
         /// <summary>
         /// Returns true if the fileStream is not null and can be written to, false otherwise
@@ -123,7 +130,7 @@ namespace RelhaxModpack
             string formattedDateTime = DateTime.Now.ToString(Timestamp);
             message = string.Format("{0}   {1}{2}", formattedDateTime, logMessageLevel, message);
             Write(message);
-            OnLogfileWrite?.Invoke(message);
+            OnLogfileWrite?.Invoke(this, new LogMessageEventArgs() { LogLevel = logLevel, Message = message });
         }
 
         /// <summary>

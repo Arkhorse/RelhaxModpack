@@ -549,6 +549,22 @@
             </summary>
             <returns>The atlas file name</returns>
         </member>
+        <member name="T:RelhaxModpack.Automation.AutomationSequence">
+            <summary>
+            An AutomationSequence class is a container to store a list of Automation tasks that pertain to a package.
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Automation.AutomationSequencer.BranchesURL">
+            <summary>
+            The API URL to return a json format document of the current branches in the automation repository
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Automation.AutomationSequencer.LoadBranchesListAsync">
+            <summary>
+            Load the list of branches from github
+            </summary>
+            <returns>A task of the asynchronous operation</returns>
+        </member>
         <member name="T:RelhaxModpack.Database.Category">
             <summary>
             a category is what makes up each tab in the mod selection display window. It holds the first level of list of SelectablePackages
@@ -606,12 +622,6 @@
         <member name="P:RelhaxModpack.Database.Category.Dependencies">
             <summary>
             List of dependencies of this category (Any package selected in this category needs these dependencies)
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Database.Category.InstallGroup">
-            <summary>
-            The install group number of the category. Used to denote which install thread it is assigned to.
-            Two (or more) categories can have the same number to be on the same install thread
             </summary>
         </member>
         <member name="P:RelhaxModpack.Database.Category.TabPage">
@@ -751,12 +761,6 @@
             <returns>The list of URLs</returns>
         </member>
         <member name="M:RelhaxModpack.Database.DatabaseUtils.GetBetaDatabase1V1FilesList">
-            <summary>
-            Get a list of all URLs to each xml document file of the database using the selected branch and loads it to an XmlDocument object
-            </summary>
-            <returns>The list of URLs</returns>
-        </member>
-        <member name="M:RelhaxModpack.Database.DatabaseUtils.GetBetaDatabase1V1FilesListAsync">
             <summary>
             Get a list of all URLs to each xml document file of the database using the selected branch and loads it to an XmlDocument object
             </summary>
@@ -977,18 +981,6 @@
             </summary>
             <param name="listToCheck">The list of DatabasePackages</param>
             <returns>The maximum PatchGroup number</returns>
-        </member>
-        <member name="M:RelhaxModpack.Database.DatabaseUtils.GetBetaDatabase1V1ForStringCompare(System.Boolean)">
-            <summary>
-            Get all xml strings for the V2 database file format from the selected beta database github branch
-            </summary>
-            <returns>all xml files in string form of the V2 database</returns>
-        </member>
-        <member name="M:RelhaxModpack.Database.DatabaseUtils.GetBetaDatabase1V1ForStringCompareAsync">
-            <summary>
-            Get all xml strings for the V2 database file format from the selected beta database github branch
-            </summary>
-            <returns>all xml files in string form of the V2 database</returns>
         </member>
         <member name="T:RelhaxModpack.Database.IDatabaseComponent">
             <summary>
@@ -1995,16 +1987,6 @@
             The path or pattern to a file or files to backup to a temporary directory
             </summary>
         </member>
-        <member name="P:RelhaxModpack.Database.UserFile.PlaceBeforeExtraction">
-            <summary>
-            Speed up the restore backup function in case of ClanIcons, the "backup folder" will be pushed back at once (and not file by file)
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Database.UserFile.SystemInitiated">
-            <summary>
-            Entry will be processed in any case (if package is checked), even if "save user data" option is "false"
-            </summary>
-        </member>
         <member name="P:RelhaxModpack.Database.UserFile.FilesSaved">
             <summary>
             The list of actual files saved to the temporary backup directory. Contains the full path and file name
@@ -2029,6 +2011,31 @@
             </summary>
             <param name="userFileToCopy">The object to copy</param>
             <returns>A new UserFile object with the same values and new list elements with the same values</returns>
+        </member>
+        <member name="T:RelhaxModpack.AutomationRunnerSettings">
+            <summary>
+            Defines settings used in the database automation runner window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.AutomationRunnerSettings.Filename">
+            <summary>
+            The name of the xml file on disk
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.AutomationRunnerSettings.SelectedBranch">
+            <summary>
+            The name of the branch on github that the user specifies to download the automation scripts from
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.ISettingsFile">
+            <summary>
+            Represents a class that is used within windows as a serialized to/from xml settings definition holder
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.ISettingsFile.Filename">
+            <summary>
+            The name of the file on disk
+            </summary>
         </member>
         <member name="T:RelhaxModpack.UI.BoundUISettings">
             <summary>
@@ -4036,6 +4043,46 @@
             <param name="item">The item to test</param>
             <returns>True if the item is of StretchingTreeViewItem class, false otherwise</returns>
         </member>
+        <member name="T:RelhaxModpack.Utilities.ClassEventArgs.LogMessageEventArgs">
+            <summary>
+            Event argument class when a log message is sent to a subscribed event
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.LogMessageEventArgs.Message">
+            <summary>
+            The complete message that was written to text file
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.LogMessageEventArgs.LogLevel">
+            <summary>
+            The log level from the method call
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Utilities.ClassEventArgs.EditorTransferEventArgs">
+            <summary>
+            Event args returned to the editor for when an FTP upload or download is complete
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.EditorTransferEventArgs.Package">
+            <summary>
+            The package that was just uploaded
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.EditorTransferEventArgs.UploadedFilename">
+            <summary>
+            The path to the file that was uploaded or downloaded
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.EditorTransferEventArgs.UploadedFilepathOnline">
+            <summary>
+            The FTP path to the field that was uploaded or downloaded
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.ClassEventArgs.EditorTransferEventArgs.TransferMode">
+            <summary>
+            The Transfer mode that was used for the upload or download
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Utilities.Enums.ApplicationMode">
             <summary>
             The primary functional modes the application can run in
@@ -4066,6 +4113,31 @@
             The patch runner mode. Can be used in command line mode, used for patching files given patch file instructions
             </summary>
         </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ApplicationMode.AutomationRunner">
+            <summary>
+            The database automation runner mode. Used for running automation sequences
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Utilities.Enums.ApplicationVersions">
+            <summary>
+            The build distribution version of the application
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ApplicationVersions.Stable">
+            <summary>
+            The stable distribution for all users
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ApplicationVersions.Beta">
+            <summary>
+            The beta distribution, for advanced users, may have new features or improvements, and bugs
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ApplicationVersions.Alpha">
+            <summary>
+            The alpha distribution. Should never be publicly distributed
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Utilities.Enums.ApplyBehavior">
             <summary>
             The different ways that the apply and save database buttons can interact
@@ -4084,6 +4156,26 @@
         <member name="F:RelhaxModpack.Utilities.Enums.ApplyBehavior.SaveTriggersApply">
             <summary>
             When you click the save button, it also clicks the apply button before saving.
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Utilities.Enums.EditorTransferMode">
+            <summary>
+            The primary functional modes the application can run in
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.EditorTransferMode.DownloadZip">
+            <summary>
+            Downloading a zip file from the FTP wot online folder to disk
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.EditorTransferMode.UploadZip">
+            <summary>
+            Uploading a zip file from disk to the FTP wot online folder
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.EditorTransferMode.UploadMedia">
+            <summary>
+            Uploading a media preview file from disk to the FTP Medias folder
             </summary>
         </member>
         <member name="T:RelhaxModpack.Utilities.Enums.DatabaseVersions">
@@ -4313,6 +4405,11 @@
             The log file for the database update tool
             </summary>
         </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.Logfiles.AutomationRunner">
+            <summary>
+            The log file for the database automation runner window
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Utilities.Enums.LogLevel">
             <summary>
             The level of severity of the log message
@@ -4346,6 +4443,26 @@
         <member name="F:RelhaxModpack.Utilities.Enums.LogLevel.ApplicationHalt">
             <summary>
             The application is closing now
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Utilities.Enums.MacroType">
+            <summary>
+            The enumeration representations of the level of where the macro is defined. Implies protection level of the macro
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.MacroType.ApplicationDefined">
+            <summary>
+            Macro is hard-code defined inside the application. It cannot be overridden
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.MacroType.Global">
+            <summary>
+            Macro is defined in the global macros definition file. Can be overridden with a local value.
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.MacroType.Local">
+            <summary>
+            Macro is defined in the local automation sequence.
             </summary>
         </member>
         <member name="T:RelhaxModpack.Utilities.Enums.MediaType">
@@ -4543,6 +4660,31 @@
             Replacing zip path macros with absolute extraction paths
             </summary>
         </member>
+        <member name="T:RelhaxModpack.Utilities.Enums.ReturnCodes">
+            <summary>
+            Application return error codes
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ReturnCodes.Success">
+            <summary>
+            No error occurred
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ReturnCodes.LogfileError">
+            <summary>
+            Error with logfile creation
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ReturnCodes.PatcherNoSpecifiedFiles">
+            <summary>
+            No files specified on the command line when in patch mode
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.ReturnCodes.PatcherNoPatchesParsed">
+            <summary>
+            No patch objects parsed when specified on the command line when in patch mode
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Utilities.Enums.SelectionTypes">
             <summary>
             The types of UI selections for building the selection tree
@@ -4586,6 +4728,21 @@
         <member name="F:RelhaxModpack.Utilities.Enums.SelectionView.DefaultV2">
             <summary>
             Default WPF V2 style
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Utilities.Enums.AutomationRunMode">
+            <summary>
+            The run mode of the automation sequencer
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.AutomationRunMode.Interactive">
+            <summary>
+            Gui run mode. Will not stop on errors
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Utilities.Enums.AutomationRunMode.Batch">
+            <summary>
+            Batch run mode. Will not stop on errors inside an automation script
             </summary>
         </member>
         <member name="T:RelhaxModpack.Utilities.Enums.UIThemes">
@@ -5034,7 +5191,7 @@
             Multiply by this value to convert milliseconds to seconds
             </summary>
         </member>
-        <member name="F:RelhaxModpack.Utilities.CommonUtils.TO_MINUETS">
+        <member name="F:RelhaxModpack.Utilities.CommonUtils.TO_MINUTES">
             <summary>
             Multiply by this value to convert seconds to minuets
             </summary>
@@ -6063,6 +6220,1245 @@
             </summary>
             <remarks>This is *not* loaded from the xml file and is used internally</remarks>
         </member>
+        <member name="T:RelhaxModpack.Windows.DatabaseAutomationRunner">
+            <summary>
+            Interaction logic for DatabaseAutomationRunner.xaml
+            </summary>
+            <summary>
+            DatabaseAutomationRunner
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseAutomationRunner.DatabaseAutomationRunnerCommandLineArg">
+            <summary>
+            The command line argument specified at application launch to show this window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseAutomationRunner.#ctor">
+            <summary>
+            Create an instance of the DatabaseAutomationRunner window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.DatabaseAutomationRunner.SettingsFilename">
+            <summary>
+            The name of the xml settings file for the DatabaseAutomationRunner window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.DatabaseAutomationRunner.LogFilename">
+            <summary>
+            The name of the logfile for the DatabaseAutomationRunner window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.DatabaseAutomationRunner.LaunchedFromMainWindow">
+            <summary>
+            Indicates if this editor instance was launched from the MainWindow or from command line
+            </summary>
+            <remarks>This changes the behavior of the logging for the editor</remarks>
+        </member>
+        <member name="P:RelhaxModpack.Windows.DatabaseAutomationRunner.CommandLineArg">
+            <summary>
+            The command line argument specified at application launch to show this window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.DatabaseAutomationRunner.Settings">
+            <summary>
+            The settings definitions class for this window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseAutomationRunner.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ICustomFeatureWindow">
+            <summary>
+            An interface definition to specify a window that is a separate sub-function of the application:
+            It has its own log and settings file.
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ICustomFeatureWindow.SettingsFilename">
+            <summary>
+            The name of the xml settings file for this window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ICustomFeatureWindow.LogFilename">
+            <summary>
+            The name of the logfile for this window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ICustomFeatureWindow.CommandLineArg">
+            <summary>
+            The command line argument to launch this window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ICustomFeatureWindow.LaunchedFromMainWindow">
+            <summary>
+            Indicates if this editor instance was launched from the MainWindow or from command line
+            </summary>
+            <remarks>This changes the behavior of the logging for the editor</remarks>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ICustomFeatureWindow.Settings">
+            <summary>
+            The settings definitions class for this window
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.AskCloseWoTResult">
+            <summary>
+            A return enumeration for the result of the AskCloseWoT window
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.Retry">
+            <summary>
+            Try again to check if WoT is open
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.CancelInstallation">
+            <summary>
+            Cancel the current installation
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.ForceClosed">
+            <summary>
+            Attempt to force close the WoT process
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.AskCloseWoT">
+            <summary>
+            Interaction logic for AskCloseWoT.xaml
+            </summary>
+            <summary>
+            AskCloseWoT
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.AskCloseWoT.AskCloseWoTResult">
+            <summary>
+            The return structure for determining the result from closing this window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AskCloseWoT.#ctor">
+            <summary>
+            Create an instance of the AskCloseWoT window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AskCloseWoT.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.CreateFTPFolderName">
+            <summary>
+            Interaction logic for CreateFTPFolderName.xaml
+            </summary>
+            <summary>
+            CreateFTPFolderName
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPPath">
+            <summary>
+            The absolute FTP path to the current folder
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.Credential">
+            <summary>
+            The FTP credentials to use
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPReturnPath">
+            <summary>
+            The absolute FTP path to the newly created folder
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPReturnFolderName">
+            <summary>
+            The newly created folder name
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.CreateFTPFolderName.#ctor">
+            <summary>
+            Create an instance of the CreateFTPFolderName window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.CreateFTPFolderName.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.Credits">
+            <summary>
+            Interaction logic for Credits.xaml
+            </summary>
+            <summary>
+            Credits
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Credits.#ctor">
+            <summary>
+            Create an instance of the Credits window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Credits.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs">
+            <summary>
+            Event argument passed back to the caller for when the developer selection window is closed
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs.LoadSelection">
+            <summary>
+            Determines if a selection should be loaded (for example, if the user closed the window instead of selecting one)
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs.FileToLoad">
+            <summary>
+            the name of the file to load from the online list of selection files
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.DeveloperSelectionsClosedDelagate">
+            <summary>
+            The delegate callback for when the developer selections window is closed
+            </summary>
+            <param name="sender">The sender (this)</param>
+            <param name="e">The arguments</param>
+        </member>
+        <member name="T:RelhaxModpack.Windows.DeveloperSelectionsViewer">
+            <summary>
+            Interaction logic for DeveloperSelectionsViewer.xaml
+            </summary>
+            <summary>
+            DeveloperSelectionsViewer
+            </summary>
+        </member>
+        <member name="E:RelhaxModpack.Windows.DeveloperSelectionsViewer.OnDeveloperSelectionsClosed">
+            <summary>
+            Fires when the developer selection window is closed
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DeveloperSelectionsViewer.#ctor">
+            <summary>
+            Create an instance of the DeveloperSelectionsViewer window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DeveloperSelectionsViewer.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.Diagnostics">
+            <summary>
+            Interaction logic for Diagnostics.xaml
+            </summary>
+            <summary>
+            Diagnostics
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.Diagnostics.RelhaxLogfileTrimLength">
+            <summary>
+            The number of log file entries that should be kept after the trim operation
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Diagnostics.#ctor">
+            <summary>
+            Create an instance of the Diagnostics window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Diagnostics.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.EditorAddRemove">
+            <summary>
+            Interaction logic for EditorAddRemove.xaml
+            </summary>
+            <summary>
+            EditorAddRemove
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.GlobalDependencies">
+            <summary>
+            The list of parsed global dependencies
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.Dependencies">
+            <summary>
+            The list of parsed dependencies
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.ParsedCategoryList">
+            <summary>
+            The list of parsed categories
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.SelectedPackage">
+            <summary>
+            The referenced package when selecting to add, the package selected when removing
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.EditOrAdd">
+            <summary>
+            True is moving package, false is adding package
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.AddSameLevel">
+            <summary>
+            Toggles if the user requests to add the package at a new level or in the same level as the referenced package
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorAddRemove.DatabaseTreeviewSelectedItem">
+            <summary>
+            The currently selected package in the editor's database tree view
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.EditorAddRemove.#ctor">
+            <summary>
+            Create an instance of the EditorAddRemove window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.EditorAddRemove.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.EditorSelectMediaUploadLocation">
+            <summary>
+            Interaction logic for EditorSelectMediaUploadLocation.xaml
+            </summary>
+            <summary>
+            EditorSelectMediaUploadLocation
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.Credential">
+            <summary>
+            The FTP network credential
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.UploadPath">
+            <summary>
+            The FTP upload path to upload the media to
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.#ctor">
+            <summary>
+            Create an instance of the EditorSelectMediaUploadLocation window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ExceptionCaptureDisplay">
+            <summary>
+            Interaction logic for ExceptionCaptureDisplay.xaml
+            </summary>
+            <summary>
+            ExceptionCaptureDisplay
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ExceptionCaptureDisplay.#ctor">
+            <summary>
+            Create an instance of the ExceptionCaptureDisplay window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ExceptionCaptureDisplay.ExceptionText">
+            <summary>
+            Gets or sets the Exception text to display
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ExceptionCaptureDisplay.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ExportModeSelect">
+            <summary>
+            Interaction logic for ExportModeSelect.xaml
+            </summary>
+            <summary>
+            ExportModeSelect
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ExportModeSelect.SelectedVersionInfo">
+            <summary>
+            The selection version info struct that was selected from the user selection
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ExportModeSelect.#ctor">
+            <summary>
+            Create an instance of the ExportModeSelect class
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ExportModeSelect.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.FirstLoadSelectLanguage">
+            <summary>
+            Interaction logic for FirstLaunchSelectLanguage.xaml
+            </summary>
+            <summary>
+            FirstLoadSelectLanguage
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.FirstLoadSelectLanguage.Continue">
+            <summary>
+            Flag to determine if the user selected a language
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.FirstLoadSelectLanguage.#ctor">
+            <summary>
+            Create and instance of the FirstLoadSelectLanguage Window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.FirstLoadSelectLanguage.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.FirstLoadAcknowledgments">
+            <summary>
+            Interaction logic for FirstLoadAcknowledgments.xaml
+            </summary>
+            <summary>
+            FirstLoadAcknowledgments
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.FirstLoadAcknowledgments.UserAgreed">
+            <summary>
+            Gets and sets is the user has agreed to the Acknowledgments before allowing him/her to use the application
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.FirstLoadAcknowledgments.#ctor">
+            <summary>
+            Create an instance of the FirstLoadAcknowledgments window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.FirstLoadAcknowledgments.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.GameCenterProperty">
+            <summary>
+            The object used in getting the value for the php update request
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.FileName">
+            <summary>
+            The name of the xml file to get the value from
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.Xpath">
+            <summary>
+            The xml xpath to get the value from inside the xml document
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.ValueBlock">
+            <summary>
+            The TextBlock that holds the php value text
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.KeyBlock">
+            <summary>
+            The Textblock that holds the php key text
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.Value">
+            <summary>
+            The value from the xml document to use for the php GET request
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.GetRequestParamater">
+            <summary>
+            The name of the php GET request parameter
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.GaveError">
+            <summary>
+            Stores if getting the value from xml document was successful
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterProperty.IsRequired">
+            <summary>
+            Flag for if this parameter is required (hd parameter is not required, for example)
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.PatchFileProperty">
+            <summary>
+            A class definition for the xml objects returned from the php update request
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.PatchFileProperty.Filename">
+            <summary>
+            The name of the update file
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.PatchFileProperty.FolderName">
+            <summary>
+            The name of the folder inside 'updates' folder to place the update
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.PatchFileProperty.BaseURL">
+            <summary>
+            The base URL of where to download the file from
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.PatchFileProperty.Size">
+            <summary>
+            The size of the file
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.GameCenterUpdateDownloader">
+            <summary>
+            Interaction logic for GameCenterUpdateDownloader.xaml
+            </summary>
+            <summary>
+            GameCenterUpdateDownloader
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.GameCenterUpdateDownloader.SelectedClient">
+            <summary>
+            The path to the root client folder (World_of_Tanks), for example
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.GameInfoXml">
+            <summary>
+            The name of the game info xml to get some of the php properties from
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.MetaDataXml">
+            <summary>
+            The name of the metadata xml to get some of the php properties from
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.GameMetadataFolder">
+            <summary>
+            The name of the folder where the metadata xml file is stored
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcNotificationsXml">
+            <summary>
+            The Wargaming game center xml file containing the app_id
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcVersionXml">
+            <summary>
+            The wargaming game center xml file containing the application version
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcProcessName">
+            <summary>
+            The name of the Game center process shown in windows
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.GameCenterUpdateDownloader.#ctor">
+            <summary>
+            Create an instance of the GameCenterUpdateDownloaded window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.GameCenterUpdateDownloader.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.NewsViewer">
+            <summary>
+            Interaction logic for NewsViewer.xaml
+            </summary>
+            <summary>
+            NewsViewer
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.NewsViewer.#ctor">
+            <summary>
+            Create an instance of the NewsViewer window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.NewsViewer.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.PopOutReplacePatchDesigner">
+            <summary>
+            Interaction logic for PopOutReplacePatchDesigner.xaml
+            </summary>
+            <summary>
+            PopOutReplacePatchDesigner
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.PopOutReplacePatchDesigner.#ctor">
+            <summary>
+            Create an instance of the PopOutReplacePatchDesigner Window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.PopOutReplacePatchDesigner.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.RelhaxColorPicker">
+            <summary>
+            Interaction logic for RelhaxColorPicker.xaml
+            </summary>
+            <summary>
+            RelhaxColorPicker
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.RelhaxColorPicker.#ctor">
+            <summary>
+            Create an instance of the RelhaxColorPicker window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.RelhaxColorPicker.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.AdvancedProgress">
+            I exist as a branch
+             <summary>
+             Interaction logic for Window1.xaml
+             </summary>
+            <summary>
+            AdvancedProgress
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.#ctor">
+            <summary>
+            Create and initialize the AdvancedProgress window
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ShouldUserInstallBeCalled">
+            <summary>
+            Flag for if the user installation reporter should have been called
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.BackupModsReporter">
+            <summary>
+            The UI Reporting object for the step of backing up mods
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.BackupDataClearCacheClearLogsReporter">
+            <summary>
+            The UI Reporting object for the steps of backing up data, clearing cache, and clearing logs
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.CleanModsReporter">
+            <summary>
+            The UI Reporting object for the step of cleaning mods
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ExtractionModsReporters">
+            <summary>
+            The UI Reporting object for the step of extracting mods
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ExtractionUserModsReporter">
+            <summary>
+            The UI Reporting object for the step of extracting user mods
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.RestoreDataXmlUnpackReporter">
+            <summary>
+            The UI Reporting object for the step of unpacking xml files
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.PatchReporter">
+            <summary>
+            The UI Reporting object for the step of patching files
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ShortcutsReporter">
+            <summary>
+            The UI Reporting object for the step of creating shortcuts
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.AtlasReporter">
+            <summary>
+            The UI Reporting object for the step of Creating atlas files
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AdvancedProgress.FontInstallTrimDownloadCacheCleanupReporter">
+            <summary>
+            The UI Reporting object for the step of font install, trimming download cache, and cleanup
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.OnReportAdvancedProgress(RelhaxModpack.UI.RelhaxInstallerProgress)">
+            <summary>
+            Update the advanced progress UI objects
+            </summary>
+            <param name="progress">The progress report object</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleComplete(RelhaxModpack.UI.RelhaxInstallTaskReporter)">
+            <summary>
+            Toggle a reporting task to the complete state
+            </summary>
+            <param name="reporter">The task to toggle</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleError(RelhaxModpack.UI.RelhaxInstallTaskReporter)">
+            <summary>
+            Toggle a reporting task to the error state
+            </summary>
+            <param name="reporter">The task to toggle</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleComplete(RelhaxModpack.InstallerExitCodes)">
+            <summary>
+            Toggle a reporting task to the complete state
+            </summary>
+            <param name="exitCode">The reporter of this corresponding install step</param>
+            <remarks>If the task reporter is null, it won't throw a NullRefrenceException</remarks>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AdvancedProgress.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.AddPicturesZip">
+            <summary>
+            Interaction logic for AddPicturesZip.xaml
+            </summary>
+            <summary>
+            AddPicturesZip
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AddPicturesZip.#ctor">
+            <summary>
+            Create and initialize the AddPicturesZip window
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AddPicturesZip.FilesToAddalways">
+            <summary>
+            A list of files to add for any diagnostic bug report
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.AddPicturesZip.FilesToAddList">
+            <summary>
+            FilesToAddList Name Field
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.AddPicturesZip.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.DatabaseEditor">
+            <summary>
+            Interaction logic for DatabaseEditor.xaml
+            </summary>
+            <summary>
+            DatabaseEditor
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditor.LaunchedFromMainWindow">
+            <summary>
+            Indicates if this editor instance was launched from the MainWindow or from command line
+            </summary>
+            <remarks>This changes the behavior of the logging for the editor</remarks>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseEditor.#ctor">
+            <summary>
+            Create an instance of the DatabaseEditor
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseEditor.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.EditorTransferWindowClosed">
+            <summary>
+            The delegate for invocation of when the FTP upload or download finishes
+            </summary>
+            <param name="sender">The sending object</param>
+            <param name="e">The Upload or download event arguments</param>
+        </member>
+        <member name="T:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow">
+            <summary>
+            Interaction logic for DatabaseEditorTrnasferWindow.xaml
+            </summary>
+            <summary>
+            DatabaseEditorTrnasferWindow
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.ZipFilePathDisk">
+            <summary>
+            The path to the zip file on the disk
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.ZipFilePathOnline">
+            <summary>
+            The FTP path to the zip file
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.ZipFileName">
+            <summary>
+            The complete name of the Zip file
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.Credential">
+            <summary>
+            The FTP credentials
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.TransferMode">
+            <summary>
+            Enumeration flag to indicate uploading or downloading
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.PackageToUpdate">
+            <summary>
+            The package being updated. A null package with Upload=true indicates the item being uploaded is a media
+            </summary>
+        </member>
+        <member name="E:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.OnEditorUploadDownloadClosed">
+            <summary>
+            The event callback used for the editor when an upload or download is finished
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.Countdown">
+            <summary>
+            The timeout, in seconds, until the window will automatically close
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.EditorSettings">
+            <summary>
+            The reference to the editor settings object. Must be supplied
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.#ctor">
+            <summary>
+            Create an instance of the DatabaseEditorDownlaod class
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.DatabaseEditorTrnasferWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ModpackToolbox">
+            <summary>
+            Interaction logic for DatabaseUpdater.xaml
+            </summary>
+            <summary>
+            ModpackToolbox
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.ModpackToolbox.HardCodeRepoPath">
+            <summary>
+            The current path for Willster419's database repository
+            </summary>
+            <remarks>
+            This was done because the database repository is different then the application repository.
+            During debug, this can be set to have the updater (in the repository path) assume that it's in the database repository.
+            </remarks>
+        </member>
+        <member name="F:RelhaxModpack.Windows.ModpackToolbox.UseHardCodePath">
+            <summary>
+            Flag to use the 
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ModpackToolbox.#ctor">
+            <summary>
+            Create an instance of the DatabaseUpdater window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ModpackToolbox.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.InstallFinished">
+            <summary>
+            Interaction logic for InstallFinished.xaml
+            </summary>
+            <summary>
+            InstallFinished
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.InstallFinished.#ctor">
+            <summary>
+            Create an instance of the InstallFinished window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.InstallFinished.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.SelectionListEventArgs">
+            <summary>
+            Event arguments for when the selection list is closed
+            </summary>
+            <remarks>See https://stackoverflow.com/questions/623451/how-can-i-make-my-own-event-in-c </remarks>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.ContinueInstallation">
+            <summary>
+            If the installation should be continued or if the user canceled
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.ParsedCategoryList">
+            <summary>
+            The list of categories
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.Dependencies">
+            <summary>
+            The list of dependencies
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.GlobalDependencies">
+            <summary>
+            The list of global dependencies
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.UserMods">
+            <summary>
+            The list of use mods
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.IsAutoInstall">
+            <summary>
+            Flag to determine if the current installation is started from auto install mode
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.IsSelectionOutOfDate">
+            <summary>
+            Flag to determind if the current installation loaded with selection file
+            format V3+ is out of date with what the database has
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.SelectionListClosedDelegate">
+            <summary>
+            The delegate to invoke when calling back to the sender for the SelectionClosed event
+            </summary>
+            <param name="sender">The sender (this)</param>
+            <param name="e">The event arguments to send to the installer (MainWindow)</param>
+        </member>
+        <member name="T:RelhaxModpack.Windows.SelectionPropagationDirection">
+            <summary>
+            The UI checked propagation directions
+            </summary>
+            <remarks>When a UI package element is checked, it needs to propagate the checked behavior up or down to prevent an invalid selection</remarks>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionPropagationDirection.PropagateUp">
+            <summary>
+            Up the higher parent levels
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.SelectionPropagationDirection.PropagateDown">
+            <summary>
+            Down to lower child levels
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ModSelectionList">
+            <summary>
+            Interaction logic for ModSelectionList.xaml
+            </summary>
+            <summary>
+            ModSelectionList
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.ParsedCategoryList">
+            <summary>
+            The list of categories
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.GlobalDependencies">
+            <summary>
+            The list of global dependencies
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.Dependencies">
+            <summary>
+            The list of dependencies
+            </summary>
+        </member>
+        <member name="E:RelhaxModpack.Windows.ModSelectionList.OnSelectionListReturn">
+            <summary>
+            The event that a caller can subscribe to wait for when the selection window actually closes, with arguments for the installation
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.AutoInstallMode">
+            <summary>
+            Flag to determine if the current installation is started from auto install mode
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.LastSupportedWoTClientVersion">
+            <summary>
+            The latest supported formatted version of WoT, in full version format (e.g. 1.7.0.1) 
+            </summary>
+            <remarks>This is used for patch days when a user is installing for a WoT version not yet supported</remarks>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ModSelectionList.LoadingUI">
+            <summary>
+            Flag to indicate if the window is loading application specific UI
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ModSelectionList.#ctor">
+            <summary>
+            Create an instance of the ModSelectionList window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ModSelectionList.ClearSelections(System.Collections.Generic.List{RelhaxModpack.Database.Category})">
+            <summary>
+            Clears all selections in the given lists by setting the checked properties to false
+            </summary>
+            <param name="ParsedCategoryList">The list of Categories</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ModSelectionList.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.PatchDesigner">
+            <summary>
+            Interaction logic for PatchDesigner.xaml
+            </summary>
+            <summary>
+            PatchDesigner
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.PatchDesigner.LaunchedFromMainWindow">
+            <summary>
+            Indicates if this editor instance was launched from the MainWindow or from command line
+            </summary>
+            <remarks>This changes the behavior of the logging for the editor</remarks>
+        </member>
+        <member name="M:RelhaxModpack.Windows.PatchDesigner.#ctor">
+            <summary>
+            Create an instance of the PatchDesigner window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.PatchDesigner.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.Preview">
+            <summary>
+            Interaction logic for Preview.xaml
+            </summary>
+            <summary>
+            Preview
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.Preview.Medias">
+            <summary>
+            Get or set the list of media preview components
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.Preview.EditorMode">
+            <summary>
+            Sets if the preview was launched from the editor or from the selection list
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.Preview.ComboBoxItemsInsideMode">
+            <summary>
+            Get or set if the package received contains media from multiple packages from a combobox
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Windows.Preview.InvokedPackage">
+            <summary>
+            Get or set the package that invoked the preview window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Preview.#ctor">
+            <summary>
+            Create an instance of the Preview window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.Preview.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ProgressIndicator">
+            <summary>
+            Interaction logic for ProgressIndicator.xaml
+            </summary>
+            <summary>
+            ProgressIndicator
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressMinimum">
+            <summary>
+            Gets or sets the minimum value of progress to display
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressMaximum">
+            <summary>
+            Gets or sets the maximum value of progress to display
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ProgressIndicator.Message">
+            <summary>
+            Gets or sets the progress message to display
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressValue">
+            <summary>
+            Gets or sets the progress value to display
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ProgressIndicator.#ctor">
+            <summary>
+            Creates an instance of the ProgressIndicator class
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ProgressIndicator.UpdateProgress(System.Double)">
+            <summary>
+            Update the progress bar value
+            </summary>
+            <param name="percent">The progress report from minimum to maximum</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ProgressIndicator.UpdateProgress(System.Double,System.String)">
+            <summary>
+            Update the progress bar and message values
+            </summary>
+            <param name="percent">The progress report from minimum to maximum</param>
+            <param name="updatedmessage">The message to display</param>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ProgressIndicator.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.RelhaxWindow">
+            <summary>
+            Defines a window with translation and custom UI color
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.LocalizeWindow">
+            <summary>
+            Controls if the window should have translation applied
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyToolTips">
+            <summary>
+            Controls if the window should have tool tips applied
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyColorSettings">
+            <summary>
+            Controls if the window should have color settings applied
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyScaling">
+            <summary>
+            Controls if the window should apply scaling values set from the main window
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.OriginalWidth">
+            <summary>
+            The original Width and Height of the window before scaling
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.RelhaxWindow.OriginalHeight">
+            <summary>
+            The original Width and Height of the window before scaling
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.RelhaxWindow.#ctor">
+            <summary>
+            Creates an instance of the RelhaxWindow class
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.SelectionFileIssuesDisplay">
+            <summary>
+            Interaction logic for RelhaxMessageWindow.xaml
+            </summary>
+            <summary>
+            SelectionFileIssuesDisplay
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.HeaderText">
+            <summary>
+            Get or set the text of the window header (TextBlock)
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.BodyText">
+            <summary>
+            Get of set the text of the window body (TextBox)
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.ButtonText">
+            <summary>
+            Get or set the text of the window button
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.SelectionFileIssuesDisplay.#ctor">
+            <summary>
+            Create an instance of the RelhaxMessageWindow class
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.SelectionFileIssuesDisplay.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.ScalingConfirmation">
+            <summary>
+            Interaction logic for ScalingConfirmation.xaml
+            </summary>
+            <summary>
+            ScalingConfirmation
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ScalingConfirmation.#ctor">
+            <summary>
+            Create an instance of the ScalingConfirmation window
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.ScalingConfirmation.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.TemplateWindow">
+            <summary>
+            Interaction logic for TemplateWindow.xaml
+            </summary>
+            <summary>
+            TemplateWindow
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.TemplateWindow.#ctor">
+            <summary>
+            Create an instance of TemplateWindow
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.TemplateWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:RelhaxModpack.Windows.VersionInfo">
+            <summary>
+            Interaction logic for VersionInfo.xaml
+            </summary>
+            <summary>
+            VersionInfo
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Windows.VersionInfo.ConfirmUpdate">
+            <summary>
+            Gets if the user selected to accept the update
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.VersionInfo.#ctor">
+            <summary>
+            Create an instance of the VersionInfo class
+            </summary>
+        </member>
+        <member name="M:RelhaxModpack.Windows.VersionInfo.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Xml.XmlUnpack">
             <summary>
             Represents a set of xml instructions for extracting and copying xml files into another location. Includes xml binary decompression
@@ -6281,7 +7677,8 @@
             <summary>
             Delegate for allowing method callback when the logfile writes to disk
             </summary>
-            <param name="message">The formatted message that was written to the logfile</param>
+            <param name="sender">The logfile instance object</param>
+            <param name="e">The message and log level event argument</param>
         </member>
         <member name="T:RelhaxModpack.Logfile">
             <summary>
@@ -6301,6 +7698,11 @@
         <member name="P:RelhaxModpack.Logfile.Timestamp">
             <summary>
             The date and time format for writing each line in the log file
+            </summary>
+        </member>
+        <member name="P:RelhaxModpack.Logfile.IsRedirecting">
+            <summary>
+            Flag for if the log file is receiving redirections from other log file
             </summary>
         </member>
         <member name="P:RelhaxModpack.Logfile.CanWrite">
@@ -6380,6 +7782,11 @@
             The filename of the patch designer
             </summary>
         </member>
+        <member name="F:RelhaxModpack.Logging.AutomationLogFilename">
+            <summary>
+            The filename of the database automation runner
+            </summary>
+        </member>
         <member name="F:RelhaxModpack.Logging.OldApplicationLogFilename">
             <summary>
             The filename of the old application log file
@@ -6403,6 +7810,11 @@
         <member name="F:RelhaxModpack.Logging.UninstallLogFilenameBackup">
             <summary>
             The name of the backup uninstall log file. During an uninstall process, it backups the current one to provide a history of 1.
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Logging.ApplicationTempLogFilename">
+            <summary>
+            The name of the custom application log file when opening the application in a custom window mode, if the main application is already open
             </summary>
         </member>
         <member name="F:RelhaxModpack.Logging.ApplicationLogfileTimestamp">
@@ -6442,8 +7854,24 @@
             <summary>
             Get the instance of the logfile type
             </summary>
-            <param name="logfile">The logfile enumeration type you would like</param>
+            <param name="logfile">The logfile enumeration of the logfile reference to return</param>
             <returns>The instance of the log file</returns>
+        </member>
+        <member name="M:RelhaxModpack.Logging.RedirectLogOutput(RelhaxModpack.Utilities.Enums.Logfiles,RelhaxModpack.Utilities.Enums.Logfiles)">
+            <summary>
+            Re-directs log messages that are meant for one logfile, and instead get sent into another
+            </summary>
+            <param name="redirectFrom">The logfile whose messages are being redirected</param>
+            <param name="redirectTo">The logfile that will receive the redirected messages</param>
+            <returns>True if the redirection succeeds, false otherwise</returns>
+        </member>
+        <member name="M:RelhaxModpack.Logging.DisableRedirection(RelhaxModpack.Utilities.Enums.Logfiles,RelhaxModpack.Utilities.Enums.Logfiles)">
+            <summary>
+            Cancels a previous re-direction setup.
+            </summary>
+            <param name="redirectFrom">The logfile whose messages were being redirected</param>
+            <param name="redirectTo">The logfile that will no longer receive the redirected messages</param>
+            <returns>True if the redirection cancellation succeeds, false otherwise</returns>
         </member>
         <member name="M:RelhaxModpack.Logging.IsLogDisposed(RelhaxModpack.Utilities.Enums.Logfiles)">
             <summary>
@@ -6702,6 +8130,38 @@
             <param name="level">The level of severity included into the string format</param>
             <param name="args">The arguments to be passed into the string.Format() method</param>
         </member>
+        <member name="M:RelhaxModpack.Logging.AutomationRunner(System.String,RelhaxModpack.Utilities.Enums.LogLevel)">
+            <summary>
+            Writes a message to the AutomationRunner logfile
+            </summary>
+            <param name="message">The message</param>
+            <param name="level">The level of severity included into the string format</param>
+        </member>
+        <member name="M:RelhaxModpack.Logging.AutomationRunner(System.String,RelhaxModpack.Utilities.Enums.LogLevel,System.Object[])">
+            <summary>
+            Writes a message to the AutomationRunner logfile
+            </summary>
+            <param name="message">The formatted string to be passed into the string.Format() method</param>
+            <param name="level">The level of severity included into the string format</param>
+            <param name="args">The arguments to be passed into the string.Format() method</param>
+        </member>
+        <member name="M:RelhaxModpack.Logging.AutomationRunner(RelhaxModpack.Utilities.Enums.LogOptions,System.String,RelhaxModpack.Utilities.Enums.LogLevel,System.Object[])">
+            <summary>
+            Writes a message to the AutomationRunner logfile
+            </summary>
+            <param name="options">Log append options to include class name, method name, or both</param>
+            <param name="message">The formatted string to be passed into the string.Format() method</param>
+            <param name="level">The level of severity included into the string format</param>
+            <param name="args">The arguments to be passed into the string.Format() method</param>
+        </member>
+        <member name="M:RelhaxModpack.Logging.AutomationRunner(RelhaxModpack.Utilities.Enums.LogOptions,System.String,RelhaxModpack.Utilities.Enums.LogLevel)">
+            <summary>
+            Writes a message to the AutomationRunner logfile
+            </summary>
+            <param name="options">Log append options to include class name, method name, or both</param>
+            <param name="message">The formatted string to be passed into the string.Format() method</param>
+            <param name="level">The level of severity included into the string format</param>
+        </member>
         <member name="T:RelhaxModpack.PatchSettings">
             <summary>
             Defines the settings used for the patch class
@@ -6781,9 +8241,14 @@
             The timeout, in seconds, until the FTP upload or download window will close. Set to 0 to disable timeout.
             </summary>
         </member>
-        <member name="F:RelhaxModpack.EditorSettings.AutoUpdaterWorkDirectory">
+        <member name="F:RelhaxModpack.EditorSettings.UploadZipDeleteIsActuallyMove">
             <summary>
-            The directory where the auto updater will download, modify, and upload files to/from
+            Flag to determine if the delete zip button (actually open file by default) will actually delete the zip, or move it to the specified folder
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.EditorSettings.UploadZipMoveFolder">
+            <summary>
+            The folder path to move the uploaded file to. If the file already exists, it will be overridden
             </summary>
         </member>
         <member name="M:RelhaxModpack.EditorSettings.#ctor">
@@ -7106,6 +8571,13 @@
             Handles all parsing and usage of command line arguments
             </summary>
         </member>
+        <member name="F:RelhaxModpack.CommandLineSettings.CommandLineArgsToSpawnCustomWindow">
+            <summary>
+            A list of command line arguments that, when specified, would create a custom window to
+            run the application in a specific mode.
+            </summary>
+            <remarks>For example, if "database-editor" is detected, then the application is going to open the database editor</remarks>
+        </member>
         <member name="F:RelhaxModpack.CommandLineSettings.TestMode">
             <summary>
             Using the application is database test mode. Allows you to test a local database
@@ -7164,6 +8636,11 @@
             </summary>
             <param name="args">A string array of command line arguments</param>
         </member>
+        <member name="P:RelhaxModpack.CommandLineSettings.ArgsOpenCustomWindow">
+            <summary>
+            Determines if any specified command line args will cause the application to open a custom (non MainWindow) window
+            </summary>
+        </member>
         <member name="T:RelhaxModpack.Settings">
             <summary>
             Handles all generic constants and statics used throughout the application
@@ -7203,6 +8680,11 @@
         <member name="F:RelhaxModpack.Settings.PatcherSettingsFilename">
             <summary>
             The name of the modpack patch designer tool settings file
+            </summary>
+        </member>
+        <member name="F:RelhaxModpack.Settings.AutomationRunnerSettingsFilename">
+            <summary>
+            The name of the modpack automation runner tool settings file
             </summary>
         </member>
         <member name="F:RelhaxModpack.Settings.LastSavedConfigFilename">
@@ -7851,1240 +9333,6 @@
             Extracts the embedded compressed library to the location in the Filepath property
             </summary>
         </member>
-        <member name="T:RelhaxModpack.Windows.AskCloseWoTResult">
-            <summary>
-            A return enumeration for the result of the AskCloseWoT window
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.Retry">
-            <summary>
-            Try again to check if WoT is open
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.CancelInstallation">
-            <summary>
-            Cancel the current installation
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AskCloseWoTResult.ForceClosed">
-            <summary>
-            Attempt to force close the WoT process
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.AskCloseWoT">
-            <summary>
-            Interaction logic for AskCloseWoT.xaml
-            </summary>
-            <summary>
-            AskCloseWoT
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.AskCloseWoT.AskCloseWoTResult">
-            <summary>
-            The return structure for determining the result from closing this window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AskCloseWoT.#ctor">
-            <summary>
-            Create an instance of the AskCloseWoT window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AskCloseWoT.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.AutoUpdatePackageWindow">
-            <summary>
-            Interaction logic for AutoUpdatePackageWindow.xaml
-            </summary>
-            <summary>
-            AutoUpdatePackageWindow
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.AutoUpdatePackageWindow.Packages">
-            <summary>
-            Get or set the list of packages to display in the package update window
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.AutoUpdatePackageWindow.WorkingDirectory">
-            <summary>
-            Gets or sets the current directory where the window will download and upload files to/from
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AutoUpdatePackageWindow.AutoUpdateDownloadInstructionsXml">
-            <summary>
-            The absolute path inside the zip file to the download instructions xml
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AutoUpdatePackageWindow.AutoUpdateFileInstructionsXml">
-            <summary>
-            The absolute path inside the zip file to the file list instructions xml
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AutoUpdatePackageWindow.Credential">
-            <summary>
-            The FTP credentials
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AutoUpdatePackageWindow.#ctor">
-            <summary>
-            Create an instance of the AutoUpdatePackageWindow window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AutoUpdatePackageWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.CreateFTPFolderName">
-            <summary>
-            Interaction logic for CreateFTPFolderName.xaml
-            </summary>
-            <summary>
-            CreateFTPFolderName
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPPath">
-            <summary>
-            The absolute FTP path to the current folder
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.Credential">
-            <summary>
-            The FTP credentials to use
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPReturnPath">
-            <summary>
-            The absolute FTP path to the newly created folder
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.CreateFTPFolderName.FTPReturnFolderName">
-            <summary>
-            The newly created folder name
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.CreateFTPFolderName.#ctor">
-            <summary>
-            Create an instance of the CreateFTPFolderName window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.CreateFTPFolderName.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.Credits">
-            <summary>
-            Interaction logic for Credits.xaml
-            </summary>
-            <summary>
-            Credits
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Credits.#ctor">
-            <summary>
-            Create an instance of the Credits window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Credits.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs">
-            <summary>
-            Event argument passed back to the caller for when the developer selection window is closed
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs.LoadSelection">
-            <summary>
-            Determines if a selection should be loaded (for example, if the user closed the window instead of selecting one)
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DevleoperSelectionsClosedEWventArgs.FileToLoad">
-            <summary>
-            the name of the file to load from the online list of selection files
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.DeveloperSelectionsClosedDelagate">
-            <summary>
-            The delegate callback for when the developer selections window is closed
-            </summary>
-            <param name="sender">The sender (this)</param>
-            <param name="e">The arguments</param>
-        </member>
-        <member name="T:RelhaxModpack.Windows.DeveloperSelectionsViewer">
-            <summary>
-            Interaction logic for DeveloperSelectionsViewer.xaml
-            </summary>
-            <summary>
-            DeveloperSelectionsViewer
-            </summary>
-        </member>
-        <member name="E:RelhaxModpack.Windows.DeveloperSelectionsViewer.OnDeveloperSelectionsClosed">
-            <summary>
-            Fires when the developer selection window is closed
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DeveloperSelectionsViewer.#ctor">
-            <summary>
-            Create an instance of the DeveloperSelectionsViewer window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DeveloperSelectionsViewer.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.Diagnostics">
-            <summary>
-            Interaction logic for Diagnostics.xaml
-            </summary>
-            <summary>
-            Diagnostics
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.Diagnostics.RelhaxLogfileTrimLength">
-            <summary>
-            The number of log file entries that should be kept after the trim operation
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Diagnostics.#ctor">
-            <summary>
-            Create an instance of the Diagnostics window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Diagnostics.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.EditorAddRemove">
-            <summary>
-            Interaction logic for EditorAddRemove.xaml
-            </summary>
-            <summary>
-            EditorAddRemove
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.GlobalDependencies">
-            <summary>
-            The list of parsed global dependencies
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.Dependencies">
-            <summary>
-            The list of parsed dependencies
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.ParsedCategoryList">
-            <summary>
-            The list of parsed categories
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.SelectedPackage">
-            <summary>
-            The referenced package when selecting to add, the package selected when removing
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.EditOrAdd">
-            <summary>
-            True is moving package, false is adding package
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.AddSameLevel">
-            <summary>
-            Toggles if the user requests to add the package at a new level or in the same level as the referenced package
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorAddRemove.DatabaseTreeviewSelectedItem">
-            <summary>
-            The currently selected package in the editor's database tree view
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.EditorAddRemove.#ctor">
-            <summary>
-            Create an instance of the EditorAddRemove window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.EditorAddRemove.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.EditorSelectMediaUploadLocation">
-            <summary>
-            Interaction logic for EditorSelectMediaUploadLocation.xaml
-            </summary>
-            <summary>
-            EditorSelectMediaUploadLocation
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.Credential">
-            <summary>
-            The FTP network credential
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.UploadPath">
-            <summary>
-            The FTP upload path to upload the media to
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.#ctor">
-            <summary>
-            Create an instance of the EditorSelectMediaUploadLocation window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.EditorSelectMediaUploadLocation.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ExceptionCaptureDisplay">
-            <summary>
-            Interaction logic for ExceptionCaptureDisplay.xaml
-            </summary>
-            <summary>
-            ExceptionCaptureDisplay
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ExceptionCaptureDisplay.#ctor">
-            <summary>
-            Create an instance of the ExceptionCaptureDisplay window
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ExceptionCaptureDisplay.ExceptionText">
-            <summary>
-            Gets or sets the Exception text to display
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ExceptionCaptureDisplay.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ExportModeSelect">
-            <summary>
-            Interaction logic for ExportModeSelect.xaml
-            </summary>
-            <summary>
-            ExportModeSelect
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ExportModeSelect.SelectedVersionInfo">
-            <summary>
-            The selection version info struct that was selected from the user selection
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ExportModeSelect.#ctor">
-            <summary>
-            Create an instance of the ExportModeSelect class
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ExportModeSelect.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.FirstLoadSelectLanguage">
-            <summary>
-            Interaction logic for FirstLaunchSelectLanguage.xaml
-            </summary>
-            <summary>
-            FirstLoadSelectLanguage
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.FirstLoadSelectLanguage.Continue">
-            <summary>
-            Flag to determine if the user selected a language
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.FirstLoadSelectLanguage.#ctor">
-            <summary>
-            Create and instance of the FirstLoadSelectLanguage Window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.FirstLoadSelectLanguage.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.FirstLoadAcknowledgments">
-            <summary>
-            Interaction logic for FirstLoadAcknowledgments.xaml
-            </summary>
-            <summary>
-            FirstLoadAcknowledgments
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.FirstLoadAcknowledgments.UserAgreed">
-            <summary>
-            Gets and sets is the user has agreed to the Acknowledgments before allowing him/her to use the application
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.FirstLoadAcknowledgments.#ctor">
-            <summary>
-            Create an instance of the FirstLoadAcknowledgments window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.FirstLoadAcknowledgments.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.GameCenterProperty">
-            <summary>
-            The object used in getting the value for the php update request
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.FileName">
-            <summary>
-            The name of the xml file to get the value from
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.Xpath">
-            <summary>
-            The xml xpath to get the value from inside the xml document
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.ValueBlock">
-            <summary>
-            The TextBlock that holds the php value text
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.KeyBlock">
-            <summary>
-            The Textblock that holds the php key text
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.Value">
-            <summary>
-            The value from the xml document to use for the php GET request
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.GetRequestParamater">
-            <summary>
-            The name of the php GET request parameter
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.GaveError">
-            <summary>
-            Stores if getting the value from xml document was successful
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterProperty.IsRequired">
-            <summary>
-            Flag for if this parameter is required (hd parameter is not required, for example)
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.PatchFileProperty">
-            <summary>
-            A class definition for the xml objects returned from the php update request
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.PatchFileProperty.Filename">
-            <summary>
-            The name of the update file
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.PatchFileProperty.FolderName">
-            <summary>
-            The name of the folder inside 'updates' folder to place the update
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.PatchFileProperty.BaseURL">
-            <summary>
-            The base URL of where to download the file from
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.PatchFileProperty.Size">
-            <summary>
-            The size of the file
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.GameCenterUpdateDownloader">
-            <summary>
-            Interaction logic for GameCenterUpdateDownloader.xaml
-            </summary>
-            <summary>
-            GameCenterUpdateDownloader
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.GameCenterUpdateDownloader.SelectedClient">
-            <summary>
-            The path to the root client folder (World_of_Tanks), for example
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.GameInfoXml">
-            <summary>
-            The name of the game info xml to get some of the php properties from
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.MetaDataXml">
-            <summary>
-            The name of the metadata xml to get some of the php properties from
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.GameMetadataFolder">
-            <summary>
-            The name of the folder where the metadata xml file is stored
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcNotificationsXml">
-            <summary>
-            The Wargaming game center xml file containing the app_id
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcVersionXml">
-            <summary>
-            The wargaming game center xml file containing the application version
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.GameCenterUpdateDownloader.WgcProcessName">
-            <summary>
-            The name of the Game center process shown in windows
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.GameCenterUpdateDownloader.#ctor">
-            <summary>
-            Create an instance of the GameCenterUpdateDownloaded window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.GameCenterUpdateDownloader.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.NewsViewer">
-            <summary>
-            Interaction logic for NewsViewer.xaml
-            </summary>
-            <summary>
-            NewsViewer
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.NewsViewer.#ctor">
-            <summary>
-            Create an instance of the NewsViewer window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.NewsViewer.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.PopOutReplacePatchDesigner">
-            <summary>
-            Interaction logic for PopOutReplacePatchDesigner.xaml
-            </summary>
-            <summary>
-            PopOutReplacePatchDesigner
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.PopOutReplacePatchDesigner.#ctor">
-            <summary>
-            Create an instance of the PopOutReplacePatchDesigner Window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.PopOutReplacePatchDesigner.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.RelhaxColorPicker">
-            <summary>
-            Interaction logic for RelhaxColorPicker.xaml
-            </summary>
-            <summary>
-            RelhaxColorPicker
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.RelhaxColorPicker.#ctor">
-            <summary>
-            Create an instance of the RelhaxColorPicker window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.RelhaxColorPicker.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.AdvancedProgress">
-            I exist as a branch
-             <summary>
-             Interaction logic for Window1.xaml
-             </summary>
-            <summary>
-            AdvancedProgress
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.#ctor">
-            <summary>
-            Create and initialize the AdvancedProgress window
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ShouldUserInstallBeCalled">
-            <summary>
-            Flag for if the user installation reporter should have been called
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.BackupModsReporter">
-            <summary>
-            The UI Reporting object for the step of backing up mods
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.BackupDataClearCacheClearLogsReporter">
-            <summary>
-            The UI Reporting object for the steps of backing up data, clearing cache, and clearing logs
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.CleanModsReporter">
-            <summary>
-            The UI Reporting object for the step of cleaning mods
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ExtractionModsReporters">
-            <summary>
-            The UI Reporting object for the step of extracting mods
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ExtractionUserModsReporter">
-            <summary>
-            The UI Reporting object for the step of extracting user mods
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.RestoreDataXmlUnpackReporter">
-            <summary>
-            The UI Reporting object for the step of unpacking xml files
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.PatchReporter">
-            <summary>
-            The UI Reporting object for the step of patching files
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.ShortcutsReporter">
-            <summary>
-            The UI Reporting object for the step of creating shortcuts
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.AtlasReporter">
-            <summary>
-            The UI Reporting object for the step of Creating atlas files
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AdvancedProgress.FontInstallTrimDownloadCacheCleanupReporter">
-            <summary>
-            The UI Reporting object for the step of font install, trimming download cache, and cleanup
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.OnReportAdvancedProgress(RelhaxModpack.UI.RelhaxInstallerProgress)">
-            <summary>
-            Update the advanced progress UI objects
-            </summary>
-            <param name="progress">The progress report object</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleComplete(RelhaxModpack.UI.RelhaxInstallTaskReporter)">
-            <summary>
-            Toggle a reporting task to the complete state
-            </summary>
-            <param name="reporter">The task to toggle</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleError(RelhaxModpack.UI.RelhaxInstallTaskReporter)">
-            <summary>
-            Toggle a reporting task to the error state
-            </summary>
-            <param name="reporter">The task to toggle</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.ToggleComplete(RelhaxModpack.InstallerExitCodes)">
-            <summary>
-            Toggle a reporting task to the complete state
-            </summary>
-            <param name="exitCode">The reporter of this corresponding install step</param>
-            <remarks>If the task reporter is null, it won't throw a NullRefrenceException</remarks>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AdvancedProgress.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.AddPicturesZip">
-            <summary>
-            Interaction logic for AddPicturesZip.xaml
-            </summary>
-            <summary>
-            AddPicturesZip
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AddPicturesZip.#ctor">
-            <summary>
-            Create and initialize the AddPicturesZip window
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AddPicturesZip.FilesToAddalways">
-            <summary>
-            A list of files to add for any diagnostic bug report
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.AddPicturesZip.FilesToAddList">
-            <summary>
-            FilesToAddList Name Field
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AddPicturesZip.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.DatabaseEditor">
-            <summary>
-            Interaction logic for DatabaseEditor.xaml
-            </summary>
-            <summary>
-            DatabaseEditor
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditor.LaunchedFromMainWindow">
-            <summary>
-            Indicates if this editor instance was launched from the MainWindow or from command line
-            </summary>
-            <remarks>This changes the behavior of the logging for the editor</remarks>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DatabaseEditor.#ctor">
-            <summary>
-            Create an instance of the DatabaseEditor
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DatabaseEditor.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.EditorUploadDownloadEventArgs">
-            <summary>
-            Event args returned to the editor for when an FTP upload or download is complete
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorUploadDownloadEventArgs.Package">
-            <summary>
-            The package that was just uploaded
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorUploadDownloadEventArgs.UploadedFilename">
-            <summary>
-            The path to the file that was uploaded or downloaded
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.EditorUploadDownloadEventArgs.UploadedFilepathOnline">
-            <summary>
-            The FTP path to the field that was uploaded or downloaded
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.EditorUploadDownloadClosed">
-            <summary>
-            The delegate for invocation of when the FTP upload or download finishes
-            </summary>
-            <param name="sender">The sending object</param>
-            <param name="e">The Upload or download event arguments</param>
-        </member>
-        <member name="T:RelhaxModpack.Windows.DatabaseEditorDownload">
-            <summary>
-            Interaction logic for DatabaseEditorDownload.xaml
-            </summary>
-            <summary>
-            DatabaseEditorDownload
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.ZipFilePathDisk">
-            <summary>
-            The path to the zip file on the disk
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.ZipFilePathOnline">
-            <summary>
-            The FTP path to the zip file
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.ZipFileName">
-            <summary>
-            The complete name of the Zip file
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.Credential">
-            <summary>
-            The FTP credentials
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.Upload">
-            <summary>
-            Flag to indicate upload or download. True is upload, false is download
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.PackageToUpdate">
-            <summary>
-            The package being updated. A null package with Upload=true indicates the item being uploaded is a media
-            </summary>
-        </member>
-        <member name="E:RelhaxModpack.Windows.DatabaseEditorDownload.OnEditorUploadDownloadClosed">
-            <summary>
-            The event callback used for the editor when an upload or download is finished
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.DatabaseEditorDownload.Countdown">
-            <summary>
-            The timeout, in seconds, until the window will automatically close
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DatabaseEditorDownload.#ctor">
-            <summary>
-            Create an instance of the DatabaseEditorDownlaod class
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.DatabaseEditorDownload.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ModpackToolbox">
-            <summary>
-            Interaction logic for DatabaseUpdater.xaml
-            </summary>
-            <summary>
-            ModpackToolbox
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.ModpackToolbox.HardCodeRepoPath">
-            <summary>
-            The current path for Willster419's database repository
-            </summary>
-            <remarks>
-            This was done because the database repository is different then the application repository.
-            During debug, this can be set to have the updater (in the repository path) assume that it's in the database repository.
-            </remarks>
-        </member>
-        <member name="F:RelhaxModpack.Windows.ModpackToolbox.UseHardCodePath">
-            <summary>
-            Flag to use the 
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ModpackToolbox.#ctor">
-            <summary>
-            Create an instance of the DatabaseUpdater window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ModpackToolbox.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.InstallFinished">
-            <summary>
-            Interaction logic for InstallFinished.xaml
-            </summary>
-            <summary>
-            InstallFinished
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.InstallFinished.#ctor">
-            <summary>
-            Create an instance of the InstallFinished window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.InstallFinished.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.SelectionListEventArgs">
-            <summary>
-            Event arguments for when the selection list is closed
-            </summary>
-            <remarks>See https://stackoverflow.com/questions/623451/how-can-i-make-my-own-event-in-c </remarks>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.ContinueInstallation">
-            <summary>
-            If the installation should be continued or if the user canceled
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.ParsedCategoryList">
-            <summary>
-            The list of categories
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.Dependencies">
-            <summary>
-            The list of dependencies
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.GlobalDependencies">
-            <summary>
-            The list of global dependencies
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.UserMods">
-            <summary>
-            The list of use mods
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.IsAutoInstall">
-            <summary>
-            Flag to determine if the current installation is started from auto install mode
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionListEventArgs.IsSelectionOutOfDate">
-            <summary>
-            Flag to determind if the current installation loaded with selection file
-            format V3+ is out of date with what the database has
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.SelectionListClosedDelegate">
-            <summary>
-            The delegate to invoke when calling back to the sender for the SelectionClosed event
-            </summary>
-            <param name="sender">The sender (this)</param>
-            <param name="e">The event arguments to send to the installer (MainWindow)</param>
-        </member>
-        <member name="T:RelhaxModpack.Windows.SelectionPropagationDirection">
-            <summary>
-            The UI checked propagation directions
-            </summary>
-            <remarks>When a UI package element is checked, it needs to propagate the checked behavior up or down to prevent an invalid selection</remarks>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionPropagationDirection.PropagateUp">
-            <summary>
-            Up the higher parent levels
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.SelectionPropagationDirection.PropagateDown">
-            <summary>
-            Down to lower child levels
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ModSelectionList">
-            <summary>
-            Interaction logic for ModSelectionList.xaml
-            </summary>
-            <summary>
-            ModSelectionList
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.ParsedCategoryList">
-            <summary>
-            The list of categories
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.GlobalDependencies">
-            <summary>
-            The list of global dependencies
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.Dependencies">
-            <summary>
-            The list of dependencies
-            </summary>
-        </member>
-        <member name="E:RelhaxModpack.Windows.ModSelectionList.OnSelectionListReturn">
-            <summary>
-            The event that a caller can subscribe to wait for when the selection window actually closes, with arguments for the installation
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.AutoInstallMode">
-            <summary>
-            Flag to determine if the current installation is started from auto install mode
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.LastSupportedWoTClientVersion">
-            <summary>
-            The latest supported formatted version of WoT, in full version format (e.g. 1.7.0.1) 
-            </summary>
-            <remarks>This is used for patch days when a user is installing for a WoT version not yet supported</remarks>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ModSelectionList.LoadingUI">
-            <summary>
-            Flag to indicate if the window is loading application specific UI
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ModSelectionList.#ctor">
-            <summary>
-            Create an instance of the ModSelectionList window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ModSelectionList.ClearSelections(System.Collections.Generic.List{RelhaxModpack.Database.Category})">
-            <summary>
-            Clears all selections in the given lists by setting the checked properties to false
-            </summary>
-            <param name="ParsedCategoryList">The list of Categories</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ModSelectionList.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.PatchDesigner">
-            <summary>
-            Interaction logic for PatchDesigner.xaml
-            </summary>
-            <summary>
-            PatchDesigner
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.PatchDesigner.LaunchedFromMainWindow">
-            <summary>
-            Indicates if this editor instance was launched from the MainWindow or from command line
-            </summary>
-            <remarks>This changes the behavior of the logging for the editor</remarks>
-        </member>
-        <member name="M:RelhaxModpack.Windows.PatchDesigner.#ctor">
-            <summary>
-            Create an instance of the PatchDesigner window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.PatchDesigner.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.Preview">
-            <summary>
-            Interaction logic for Preview.xaml
-            </summary>
-            <summary>
-            Preview
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.Preview.Medias">
-            <summary>
-            Get or set the list of media preview components
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.Preview.EditorMode">
-            <summary>
-            Sets if the preview was launched from the editor or from the selection list
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.Preview.ComboBoxItemsInsideMode">
-            <summary>
-            Get or set if the package received contains media from multiple packages from a combobox
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.Windows.Preview.InvokedPackage">
-            <summary>
-            Get or set the package that invoked the preview window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Preview.#ctor">
-            <summary>
-            Create an instance of the Preview window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.Preview.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ProgressIndicator">
-            <summary>
-            Interaction logic for ProgressIndicator.xaml
-            </summary>
-            <summary>
-            ProgressIndicator
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressMinimum">
-            <summary>
-            Gets or sets the minimum value of progress to display
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressMaximum">
-            <summary>
-            Gets or sets the maximum value of progress to display
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ProgressIndicator.Message">
-            <summary>
-            Gets or sets the progress message to display
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.ProgressIndicator.ProgressValue">
-            <summary>
-            Gets or sets the progress value to display
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ProgressIndicator.#ctor">
-            <summary>
-            Creates an instance of the ProgressIndicator class
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ProgressIndicator.UpdateProgress(System.Double)">
-            <summary>
-            Update the progress bar value
-            </summary>
-            <param name="percent">The progress report from minimum to maximum</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ProgressIndicator.UpdateProgress(System.Double,System.String)">
-            <summary>
-            Update the progress bar and message values
-            </summary>
-            <param name="percent">The progress report from minimum to maximum</param>
-            <param name="updatedmessage">The message to display</param>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ProgressIndicator.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.RelhaxWindow">
-            <summary>
-            Defines a window with translation and custom UI color
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.LocalizeWindow">
-            <summary>
-            Controls if the window should have translation applied
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyToolTips">
-            <summary>
-            Controls if the window should have tool tips applied
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyColorSettings">
-            <summary>
-            Controls if the window should have color settings applied
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.ApplyScaling">
-            <summary>
-            Controls if the window should apply scaling values set from the main window
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.OriginalWidth">
-            <summary>
-            The original Width and Height of the window before scaling
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.RelhaxWindow.OriginalHeight">
-            <summary>
-            The original Width and Height of the window before scaling
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.RelhaxWindow.#ctor">
-            <summary>
-            Creates an instance of the RelhaxWindow class
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.SelectionFileIssuesDisplay">
-            <summary>
-            Interaction logic for RelhaxMessageWindow.xaml
-            </summary>
-            <summary>
-            SelectionFileIssuesDisplay
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.HeaderText">
-            <summary>
-            Get or set the text of the window header (TextBlock)
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.BodyText">
-            <summary>
-            Get of set the text of the window body (TextBox)
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.SelectionFileIssuesDisplay.ButtonText">
-            <summary>
-            Get or set the text of the window button
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.SelectionFileIssuesDisplay.#ctor">
-            <summary>
-            Create an instance of the RelhaxMessageWindow class
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.SelectionFileIssuesDisplay.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.ScalingConfirmation">
-            <summary>
-            Interaction logic for ScalingConfirmation.xaml
-            </summary>
-            <summary>
-            ScalingConfirmation
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ScalingConfirmation.#ctor">
-            <summary>
-            Create an instance of the ScalingConfirmation window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.ScalingConfirmation.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.TemplateWindow">
-            <summary>
-            Interaction logic for TemplateWindow.xaml
-            </summary>
-            <summary>
-            TemplateWindow
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.TemplateWindow.#ctor">
-            <summary>
-            Create an instance of TemplateWindow
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.TemplateWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.VersionInfo">
-            <summary>
-            Interaction logic for VersionInfo.xaml
-            </summary>
-            <summary>
-            VersionInfo
-            </summary>
-        </member>
-        <member name="P:RelhaxModpack.Windows.VersionInfo.ConfirmUpdate">
-            <summary>
-            Gets if the user selected to accept the update
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.VersionInfo.#ctor">
-            <summary>
-            Create an instance of the VersionInfo class
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.VersionInfo.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.Windows.AutoUpdateFilesInspector">
-            <summary>
-            Interaction logic for Window1.xaml
-            </summary>
-            <summary>
-            AutoUpdateFilesInspector
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AutoUpdateFilesInspector.#ctor">
-            <summary>
-            Create and instance of the AutoUpdateFilesInspector Window
-            </summary>
-        </member>
-        <member name="M:RelhaxModpack.Windows.AutoUpdateFilesInspector.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
         <member name="T:RelhaxModpack.CiInfo">
             <summary>Info about the continuous integration server build that produced this binary.</summary> 
         </member>
@@ -9232,44 +9480,9 @@
             <param name="window">The window to apply translations to</param>
             <param name="applyToolTips">Set to true to seach and apply tooltips to the components</param>
         </member>
-        <member name="M:RelhaxModpack.Translations.LoadTranslations">
+        <member name="M:RelhaxModpack.Translations.LoadTranslations(System.Boolean)">
             <summary>
             Loads all translation dictionaries. Should only be done once (at application start)
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.ReturnCodes">
-            <summary>
-            Application return error codes
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.ReturnCodes.Sucess">
-            <summary>
-            No error occurred
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.ReturnCodes.LogfileError">
-            <summary>
-            Error with logfile creation
-            </summary>
-        </member>
-        <member name="T:RelhaxModpack.ApplicationVersions">
-            <summary>
-            The build distribution version of the application
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.ApplicationVersions.Stable">
-            <summary>
-            The stable distribution for all users
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.ApplicationVersions.Beta">
-            <summary>
-            The beta distribution, for advanced users, may have new features or improvements, and bugs
-            </summary>
-        </member>
-        <member name="F:RelhaxModpack.ApplicationVersions.Alpha">
-            <summary>
-            The alpha distribution. Should never be publicly distributed
             </summary>
         </member>
         <member name="T:RelhaxModpack.App">

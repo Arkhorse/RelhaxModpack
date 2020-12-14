@@ -641,17 +641,17 @@ namespace RelhaxModpack.Windows
             ToggleUI((TabController.SelectedItem as TabItem), true);
         }
 
-        private async void UpdateApplicationV2UploadManagerInfo(object sender, RoutedEventArgs e)
+        private async void UpdateApplicationV2UploadManagerVersion(object sender, RoutedEventArgs e)
         {
             ToggleUI((TabController.SelectedItem as TabItem), false);
-            ReportProgress("Running upload manager_info.xml to bigmods");
+            ReportProgress(string.Format("Running upload {0} to bigmods", Settings.ManagerVersion));
             if (!(bool)SelectManagerInfoXml.ShowDialog())
             {
                 ToggleUI((TabController.SelectedItem as TabItem), true);
                 return;
             }
 
-            ReportProgress("Upload manager_info.xml");
+            ReportProgress("Upload " + Settings.ManagerVersion);
             using (client = new WebClient() { Credentials = PrivateStuff.BigmodsNetworkCredential })
             {
                 await client.UploadFileTaskAsync(PrivateStuff.BigmodsFTPModpackManager + Path.GetFileName(SelectManagerInfoXml.FileName), SelectManagerInfoXml.FileName);
@@ -733,7 +733,7 @@ namespace RelhaxModpack.Windows
             ReportProgress("Getting list of branches");
             UiUtils.AllowUIToUpdate();
 
-            List<string> branches = await CommonUtils.GetListOfGithubRepoBranchesAsync();
+            List<string> branches = await CommonUtils.GetListOfGithubRepoBranchesAsync(Settings.BetaDatabaseBranchesURL);
 
             ReportProgress(string.Join(",", branches));
             UiUtils.AllowUIToUpdate();
@@ -956,13 +956,20 @@ namespace RelhaxModpack.Windows
                 }
                 if(!filesActuallyInFolder.Contains(s))
                 {
-                    ReportProgress(string.Format("skipping file {0}, does not exist", s));
+                    ReportProgress(string.Format("Skipping file {0}, does not exist", s));
                     count++;
                     continue;
                 }
                 ReportProgress(string.Format("Deleting file {0} of {1}, {2}", count++, filesToDelete.Count, s));
-                await FtpUtils.FtpDeleteFileAsync(string.Format("{0}{1}/{2}",
-                    PrivateStuff.BigmodsFTPRootWoT, selectedVersionInfos.WoTOnlineFolderVersion, s), PrivateStuff.BigmodsNetworkCredential);
+                try
+                {
+                    await FtpUtils.FtpDeleteFileAsync(string.Format("{0}{1}/{2}",
+                        PrivateStuff.BigmodsFTPRootWoT, selectedVersionInfos.WoTOnlineFolderVersion, s), PrivateStuff.BigmodsNetworkCredential);
+                }
+                catch
+                {
+                    ReportProgress("Failed to delete file");
+                }
             }
             CleanZipFoldersTextbox.Clear();
             CleanFoldersOnlineCancelStep3.Visibility = Visibility.Hidden;
@@ -980,7 +987,7 @@ namespace RelhaxModpack.Windows
             ReportProgress("Starting Update database step 2...");
             ReportProgress("Running script to update online hash database...");
             //a PatientWebClient should allow a timeout value of 5 mins (or more)
-            await RunPhpScript(PrivateStuff.BigmodsNetworkCredentialScripts, PrivateStuff.BigmodsCreateDatabasePHP, 30 * CommonUtils.TO_SECONDS * CommonUtils.TO_MINUETS);
+            await RunPhpScript(PrivateStuff.BigmodsNetworkCredentialScripts, PrivateStuff.BigmodsCreateDatabasePHP, 30 * CommonUtils.TO_SECONDS * CommonUtils.TO_MINUTES);
         }
 
         private async void UpdateDatabaseV2Step3_Click(object sender, RoutedEventArgs e)
@@ -1078,18 +1085,12 @@ namespace RelhaxModpack.Windows
             }
 
             ReportProgress("Checking for duplicate database UID entries");
-            List<DatabasePackage> duplicatesList = DatabaseUtils.CheckForDuplicateUIDsPackageList(globalDependenciesDuplicateCheck, dependenciesDuplicateCheck, parsedCategoryListDuplicateCheck);
-            if (duplicatesList.Count == 0)
-            {
-                ReportProgress("No duplicates");
-            }
-            else
+            List<DatabasePackage> duplicatesList = DatabaseUtils.CheckForDuplicateUIDsPackageList(globalDependencies, dependencies, parsedCategoryList);
+            if (duplicatesList.Count > 0)
             {
                 ReportProgress("ERROR: The following packages are duplicate UIDs:");
                 foreach (DatabasePackage package in duplicatesList)
                     ReportProgress(string.Format("PackageName: {0}, UID: {1}", package.PackageName, package.UID));
-                ToggleUI((TabController.SelectedItem as TabItem), true);
-                return;
             }
 
             ReportProgress("No duplicates found");
@@ -1182,11 +1183,14 @@ namespace RelhaxModpack.Windows
                 {
                     ReportProgress(string.Format("Before package: PackageName = {0}, UID = {1}",beforeAfter.Before.PackageName, beforeAfter.Before.UID));
                     ReportProgress(string.Format("After package:  PackageName = {0}, UID = {1}", beforeAfter.After.PackageName, beforeAfter.After.UID));
-                    string dialog = string.Format("Package {01} had a UID change:\nBefore: {1}\nAfter{2}\nIs this known?",
+                    string dialog = string.Format("Package {0} had a UID change:\nBefore: {1}\nAfter{2}\nIs this known?",
                         beforeAfter.Before.PackageName, beforeAfter.Before.UID, beforeAfter.After.UID);
+
                     if (MessageBox.Show(dialog, "Interesting", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    {
                         ToggleUI((TabController.SelectedItem as TabItem), true);
-                    return;
+                        return;
+                    }
                 }
             }
 
